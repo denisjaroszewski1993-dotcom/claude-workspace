@@ -15,6 +15,12 @@ Grundlage: PageSpeed Insights (Mobil) – Performance 73, LCP 8,9 s.
 Geprüft: Live-HTML enthält das neue Hero-`<img>`; LCP-Element im Browser ist jetzt das Hero-Bild;
 Screenshots Mobil/Desktop optisch wie vorher.
 
+## Nachbesserung (gleicher Tag)
+- Hero auf dem Handy: eigener Hochformat-Zuschnitt per `<picture>` (Medien 2083/2084, 19 bzw. 42 KB)
+  statt des 131-KB-Querformats.
+- Lighthouse (Mobil, lokal gemessen): Score 72 → 80–83, LCP 4,1 s → 3,1–3,2 s (PSI-Ausgangswert: 8,9 s).
+  Der verbleibende Engpass ist die späte erste Darstellung (FCP ≈ 2,8 s) durch die ladeblockierenden CSS/JS-Dateien (siehe unten).
+
 ## Rückgängig machen
 `backup-startseite-1001-elementor_data-2026-09-23.json` wieder als `_elementor_data` der Seite 1001 speichern
 und den Elementor-Cache leeren (Elementor → Tools → „Dateien & Daten neu generieren“).
