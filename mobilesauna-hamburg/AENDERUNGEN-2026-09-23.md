@@ -21,6 +21,42 @@ Screenshots Mobil/Desktop optisch wie vorher.
 - Lighthouse (Mobil, lokal gemessen): Score 72 → 80–83, LCP 4,1 s → 3,1–3,2 s (PSI-Ausgangswert: 8,9 s).
   Der verbleibende Engpass ist die späte erste Darstellung (FCP ≈ 2,8 s) durch die ladeblockierenden CSS/JS-Dateien (siehe unten).
 
+## Runde 3 (abends): Ursache für „LCP 9 s trotz schnellem Startbild“ gefunden
+PageSpeed-Bericht (per Firecrawl ausgelesen): Das Startbild war nach ~1 s geladen, wurde aber erst ~1,5 s später
+gezeichnet (Element render delay), weil ~20 CSS/JS-Dateien das Rendern blockieren. PageSpeed (Lantern-Simulation)
+rechnet alles, was bis dahin fertig lädt, in den LCP ein: Google Tag Manager + Google-Tag (~300 KiB),
+die drei ohne Verzögerung geladenen Kartenbilder (JPG, ~300 KiB) und moment.js (94 KiB).
+
+Umgesetzt:
+- **Kartenbilder:** 4 Bild-Widgets → HTML-Widgets mit `<img loading="lazy">`, 4:3-WebP (480/800 px, Medien 2085–2092),
+  passendes `sizes`. Whirlpool 285 → 130 KiB, Mobile-Sauna 139 → 56 KiB usw.; sie laden erst nach dem Startbild.
+- **Button „KAUFEN“:** Elementors Standardregel (Akzent-Gold als Hintergrund) überschrieb den im Theme vorgesehenen
+  Umriss-Stil → weiße Schrift auf Gold (Kontrastfehler). Jetzt am Widget: transparent, goldener Rand, helle Schrift,
+  Hover gold gefüllt (wie `.msh-btn-outline` im Child-Theme vorgesehen).
+- **Sprunglink „Zum Inhalt wechseln“:** Ziel `#content` fehlte → Startbereich hat jetzt `id="content"`.
+- **Meta-Beschreibung:** Seitenauszug gesetzt (AIOSEO nutzt ihn als description/og:description):
+  „Mobile Sauna & Whirlpool in Hamburg mieten: online buchen, liefern lassen oder selbst abholen. Außerdem Innen- und
+  Außensaunen kaufen – Ihr Wellness-Profi.“
+
+Ergebnis PageSpeed Mobil (Lighthouse 13.5, Google-Server):
+| | vorher | danach |
+|---|---|---|
+| Performance | 73 | 87–93 |
+| LCP | 8,7–9,5 s | 2,3–2,4 s |
+| FCP | 1,4–3,0 s | 1,2–1,4 s |
+| Barrierefreiheit | 92–94 | 98 |
+| SEO | 92 | (Meta-Beschreibung ergänzt – einzige offene SEO-Prüfung) |
+
+## Noch offen (nur im WordPress-Backend möglich)
+1. **Google-Tag doppelt:** Site Kit bindet GT-WKPQTCGS direkt ein UND über den GTM-Container GTM-K8RQDK26
+   → ~190 KiB doppelt, vermutlich doppelte Seitenaufrufe in Analytics. In Site Kit „Google-Tag platzieren“ aus,
+   sofern der GTM-Container das Google-Tag auf allen Seiten auslöst (in GTM prüfen). Größter Hebel für TBT.
+2. **Buchungs-Dateien auf der Startseite** (4 CSS, moment.js, jQuery UI, Signature Pad …) per „Asset CleanUp“ nur auf /buchung/ laden.
+3. **Elementor → Einstellungen → Erweitert → Google Fonts: deaktivieren** – die Schrift lädt das Child-Theme bereits selbst
+   (derzeit doppelt: +1 blockierende CSS-Datei, +27 KiB).
+4. **Seiten-Cache + Cache-Header** (IONOS Performance bzw. WP Fastest Cache); WebP/Fonts haben derzeit keinen Cache-Header.
+5. **`<main>`-Element** fehlt (Theme-Vorlage, einzige offene Barrierefreiheits-Prüfung) – Anpassung im Child-Theme nötig.
+
 ## Rückgängig machen
 `backup-startseite-1001-elementor_data-2026-09-23.json` wieder als `_elementor_data` der Seite 1001 speichern
 und den Elementor-Cache leeren (Elementor → Tools → „Dateien & Daten neu generieren“).
