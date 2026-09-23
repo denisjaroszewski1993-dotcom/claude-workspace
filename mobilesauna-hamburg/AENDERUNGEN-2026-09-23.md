@@ -57,6 +57,17 @@ Ergebnis PageSpeed Mobil (Lighthouse 13.5, Google-Server):
 4. **Seiten-Cache + Cache-Header** (IONOS Performance bzw. WP Fastest Cache); WebP/Fonts haben derzeit keinen Cache-Header.
 5. **`<main>`-Element** fehlt (Theme-Vorlage, einzige offene Barrierefreiheits-Prüfung) – Anpassung im Child-Theme nötig.
 
+## Runde 4: Umsetzung durch Denis + IONOS-Cache
+- Site Kit **deaktiviert** (nicht gelöscht – Einstellungen bleiben für später), Elementor „Google Fonts“ **deaktiviert**.
+- **IONOS-Seitencache (Plugin „Performance“)** lieferte an echte Browser (Anfragen mit `Accept: text/html`) weiterhin
+  Kopien von vor diesen Änderungen aus (Stempel „Generated @ 23.09.2026 20:44:46“) – auch an PageSpeed.
+  Geleert durch erneutes Speichern der Startseite (leert den gesamten Cache). **Merke:** Nach Änderungen an
+  Plugin-Einstellungen immer den Cache leeren, sonst sehen Besucher den alten Stand.
+  Prüfskript: fetch mit Browser-Headern und nach „Generated @“ suchen.
+- PageSpeed danach (Mobil): Performance 94, TBT 0 ms (vorher 410 ms), LCP 2,7 s, CLS 0, A11y 98, BP 100, SEO 100.
+- **Offen:** Asset CleanUp ist aktiv, aber ohne gespeicherte Regel – die Buchungsdateien laden weiter auf allen Seiten.
+  Kalender gibt es nur auf /buchung-cube-l/, /buchung-cube-m/, /buchung-cube-s/, /buchung-whirlpool/ (IDs 1005–1008).
+
 ## Rückgängig machen
 `backup-startseite-1001-elementor_data-2026-09-23.json` wieder als `_elementor_data` der Seite 1001 speichern
 und den Elementor-Cache leeren (Elementor → Tools → „Dateien & Daten neu generieren“).
