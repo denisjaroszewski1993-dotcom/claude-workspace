@@ -41,11 +41,11 @@ Umgesetzt:
 Ergebnis PageSpeed Mobil (Lighthouse 13.5, Google-Server):
 | | vorher | danach |
 |---|---|---|
-| Performance | 73 | 87–93 |
-| LCP | 8,7–9,5 s | 2,3–2,4 s |
+| Performance | 73 | 87–93 (letzte Messung 89) |
+| LCP | 8,7–9,5 s | 2,2–2,4 s |
 | FCP | 1,4–3,0 s | 1,2–1,4 s |
 | Barrierefreiheit | 92–94 | 98 |
-| SEO | 92 | (Meta-Beschreibung ergänzt – einzige offene SEO-Prüfung) |
+| SEO | 92 | 100 |
 
 ## Noch offen (nur im WordPress-Backend möglich)
 1. **Google-Tag doppelt:** Site Kit bindet GT-WKPQTCGS direkt ein UND über den GTM-Container GTM-K8RQDK26
