@@ -1,0 +1,1688 @@
+[
+ {
+  "id": "e0215da",
+  "elType": "container",
+  "settings": {
+   "content_width": "full",
+   "flex_direction": "column",
+   "flex_justify_content": "center",
+   "min_height": {
+    "unit": "vh",
+    "size": 92,
+    "sizes": []
+   },
+   "min_height_tablet": {
+    "unit": "vh",
+    "size": 70,
+    "sizes": []
+   },
+   "min_height_mobile": {
+    "unit": "vh",
+    "size": 64,
+    "sizes": []
+   },
+   "background_background": "classic",
+   "background_color": "#1A1A1A",
+   "background_image": {
+    "url": "https://mobilesauna-hamburg.de/wp-content/uploads/2026/09/hero-home.jpg",
+    "id": 2029,
+    "source": "library"
+   },
+   "background_position": "center center",
+   "background_size": "cover",
+   "background_overlay_background": "gradient",
+   "background_overlay_color": "rgba(18,18,18,.86)",
+   "background_overlay_color_b": "rgba(18,18,18,.25)",
+   "background_overlay_gradient_angle": {
+    "unit": "deg",
+    "size": 90,
+    "sizes": []
+   },
+   "background_overlay_opacity": {
+    "unit": "px",
+    "size": 1,
+    "sizes": []
+   },
+   "css_classes": "msh-hero",
+   "background_image_mobile": {
+    "url": "https://mobilesauna-hamburg.de/wp-content/uploads/2026/09/hero-home-768x512.jpg",
+    "id": "",
+    "source": "library"
+   }
+  },
+  "elements": [
+   {
+    "id": "0ff87c2",
+    "elType": "container",
+    "settings": {
+     "content_width": "boxed",
+     "flex_direction": "column",
+     "flex_gap": {
+      "column": "20",
+      "row": "20",
+      "isLinked": true,
+      "unit": "px",
+      "size": 20
+     },
+     "flex_justify_content": "center",
+     "flex_align_items": "flex-start",
+     "padding": {
+      "unit": "px",
+      "top": "120",
+      "right": "24",
+      "bottom": "96",
+      "left": "24",
+      "isLinked": false
+     },
+     "padding_mobile": {
+      "unit": "px",
+      "top": "72",
+      "right": "20",
+      "bottom": "56",
+      "left": "20",
+      "isLinked": false
+     }
+    },
+    "elements": [
+     {
+      "id": "450b6dd",
+      "elType": "widget",
+      "settings": {
+       "title": "Willkommen",
+       "header_size": "h6",
+       "_css_classes": "msh-overline"
+      },
+      "elements": [],
+      "isInner": false,
+      "widgetType": "heading"
+     },
+     {
+      "id": "305018f",
+      "elType": "widget",
+      "settings": {
+       "title": "Ihr Wellness Profi",
+       "header_size": "h1"
+      },
+      "elements": [],
+      "isInner": false,
+      "widgetType": "heading"
+     },
+     {
+      "id": "f4dd224",
+      "elType": "widget",
+      "settings": {
+       "editor": "Sauna | Whirlpool | Mobil<br>Bau &amp; Vermietung",
+       "_css_classes": "msh-lead"
+      },
+      "elements": [],
+      "isInner": false,
+      "widgetType": "text-editor"
+     },
+     {
+      "id": "79c0269",
+      "elType": "container",
+      "settings": {
+       "content_width": "full",
+       "flex_direction": "row",
+       "flex_wrap": "wrap",
+       "flex_wrap_tablet": "wrap",
+       "flex_gap": {
+        "column": "16",
+        "row": "16",
+        "isLinked": true,
+        "unit": "px",
+        "size": 16
+       },
+       "flex_align_items": "stretch",
+       "flex_direction_mobile": "column",
+       "flex_direction_tablet": "row",
+       "flex_justify_content": "flex-start"
+      },
+      "elements": [
+       {
+        "id": "e240e57",
+        "elType": "widget",
+        "settings": {
+         "text": "Mieten",
+         "link": {
+          "url": "/mobil/",
+          "is_external": "",
+          "nofollow": ""
+         },
+         "size": "md"
+        },
+        "elements": [],
+        "isInner": false,
+        "widgetType": "button"
+       },
+       {
+        "id": "f59ba47",
+        "elType": "widget",
+        "settings": {
+         "text": "Kaufen",
+         "link": {
+          "url": "/sauna/",
+          "is_external": "",
+          "nofollow": ""
+         },
+         "size": "md",
+         "_css_classes": "msh-btn-outline"
+        },
+        "elements": [],
+        "isInner": false,
+        "widgetType": "button"
+       }
+      ],
+      "isInner": true
+     }
+    ],
+    "isInner": true
+   }
+  ],
+  "isInner": false
+ },
+ {
+  "id": "58fa8a9",
+  "elType": "container",
+  "settings": {
+   "content_width": "boxed",
+   "flex_direction": "column",
+   "flex_gap": {
+    "column": "32",
+    "row": "32",
+    "isLinked": true,
+    "unit": "px",
+    "size": 32
+   },
+   "background_background": "classic",
+   "background_color": "#1A1A1A",
+   "padding": {
+    "unit": "px",
+    "top": "96",
+    "right": "24",
+    "bottom": "96",
+    "left": "24",
+    "isLinked": false
+   },
+   "padding_tablet": {
+    "unit": "px",
+    "top": "67",
+    "right": "24",
+    "bottom": "67",
+    "left": "24",
+    "isLinked": false
+   },
+   "padding_mobile": {
+    "unit": "px",
+    "top": "48",
+    "right": "20",
+    "bottom": "48",
+    "left": "20",
+    "isLinked": false
+   }
+  },
+  "elements": [
+   {
+    "id": "daaf7a3",
+    "elType": "widget",
+    "settings": {
+     "title": "Sauna",
+     "header_size": "h6",
+     "align": "center",
+     "_css_classes": "msh-overline"
+    },
+    "elements": [],
+    "isInner": false,
+    "widgetType": "heading"
+   },
+   {
+    "id": "21ff891",
+    "elType": "widget",
+    "settings": {
+     "title": "Saunen im \u00dcberblick",
+     "header_size": "h2",
+     "align": "center",
+     "_css_classes": "msh-title-line msh-center"
+    },
+    "elements": [],
+    "isInner": false,
+    "widgetType": "heading"
+   },
+   {
+    "id": "c14d10c",
+    "elType": "container",
+    "settings": {
+     "content_width": "full",
+     "flex_direction": "row",
+     "flex_wrap": "nowrap",
+     "flex_wrap_tablet": "wrap",
+     "flex_gap": {
+      "column": "24",
+      "row": "24",
+      "isLinked": true,
+      "unit": "px",
+      "size": 24
+     },
+     "flex_align_items": "stretch",
+     "flex_direction_mobile": "column",
+     "flex_direction_tablet": "row"
+    },
+    "elements": [
+     {
+      "id": "9df0c03",
+      "elType": "container",
+      "settings": {
+       "content_width": "full",
+       "flex_direction": "column",
+       "flex_gap": {
+        "column": "0",
+        "row": "0",
+        "isLinked": true,
+        "unit": "px",
+        "size": 0
+       },
+       "width": {
+        "unit": "%",
+        "size": 33,
+        "sizes": []
+       },
+       "width_tablet": {
+        "unit": "%",
+        "size": 48,
+        "sizes": []
+       },
+       "width_mobile": {
+        "unit": "%",
+        "size": 100,
+        "sizes": []
+       },
+       "css_classes": "msh-card"
+      },
+      "elements": [
+       {
+        "id": "2cd09c7",
+        "elType": "widget",
+        "settings": {
+         "image": {
+          "url": "https://mobilesauna-hamburg.de/wp-content/uploads/2026/09/innen-sauna.jpg",
+          "id": 2031,
+          "alt": "Innen-Sauna",
+          "source": "library"
+         },
+         "image_size": "full",
+         "_css_classes": "msh-card-img"
+        },
+        "elements": [],
+        "isInner": false,
+        "widgetType": "image"
+       },
+       {
+        "id": "055c424",
+        "elType": "container",
+        "settings": {
+         "content_width": "full",
+         "flex_direction": "column",
+         "flex_gap": {
+          "column": "14",
+          "row": "14",
+          "isLinked": true,
+          "unit": "px",
+          "size": 14
+         },
+         "css_classes": "msh-card-body"
+        },
+        "elements": [
+         {
+          "id": "a323b8b",
+          "elType": "widget",
+          "settings": {
+           "text": "Innen-Sauna",
+           "link": {
+            "url": "/sauna/#innensauna",
+            "is_external": "",
+            "nofollow": ""
+           },
+           "size": "md",
+           "_css_classes": "msh-btn-full"
+          },
+          "elements": [],
+          "isInner": false,
+          "widgetType": "button"
+         }
+        ],
+        "isInner": true
+       }
+      ],
+      "isInner": true
+     },
+     {
+      "id": "751396c",
+      "elType": "container",
+      "settings": {
+       "content_width": "full",
+       "flex_direction": "column",
+       "flex_gap": {
+        "column": "0",
+        "row": "0",
+        "isLinked": true,
+        "unit": "px",
+        "size": 0
+       },
+       "width": {
+        "unit": "%",
+        "size": 33,
+        "sizes": []
+       },
+       "width_tablet": {
+        "unit": "%",
+        "size": 48,
+        "sizes": []
+       },
+       "width_mobile": {
+        "unit": "%",
+        "size": 100,
+        "sizes": []
+       },
+       "css_classes": "msh-card"
+      },
+      "elements": [
+       {
+        "id": "8beb209",
+        "elType": "widget",
+        "settings": {
+         "image": {
+          "url": "https://mobilesauna-hamburg.de/wp-content/uploads/2026/09/aussen-sauna.jpg",
+          "id": 2023,
+          "alt": "Au\u00dfen-Sauna",
+          "source": "library"
+         },
+         "image_size": "full",
+         "_css_classes": "msh-card-img"
+        },
+        "elements": [],
+        "isInner": false,
+        "widgetType": "image"
+       },
+       {
+        "id": "984dccb",
+        "elType": "container",
+        "settings": {
+         "content_width": "full",
+         "flex_direction": "column",
+         "flex_gap": {
+          "column": "14",
+          "row": "14",
+          "isLinked": true,
+          "unit": "px",
+          "size": 14
+         },
+         "css_classes": "msh-card-body"
+        },
+        "elements": [
+         {
+          "id": "da7e808",
+          "elType": "widget",
+          "settings": {
+           "text": "Au\u00dfen-Sauna",
+           "link": {
+            "url": "/sauna/#aussensauna",
+            "is_external": "",
+            "nofollow": ""
+           },
+           "size": "md",
+           "_css_classes": "msh-btn-full"
+          },
+          "elements": [],
+          "isInner": false,
+          "widgetType": "button"
+         }
+        ],
+        "isInner": true
+       }
+      ],
+      "isInner": true
+     },
+     {
+      "id": "7ef0783",
+      "elType": "container",
+      "settings": {
+       "content_width": "full",
+       "flex_direction": "column",
+       "flex_gap": {
+        "column": "0",
+        "row": "0",
+        "isLinked": true,
+        "unit": "px",
+        "size": 0
+       },
+       "width": {
+        "unit": "%",
+        "size": 33,
+        "sizes": []
+       },
+       "width_tablet": {
+        "unit": "%",
+        "size": 48,
+        "sizes": []
+       },
+       "width_mobile": {
+        "unit": "%",
+        "size": 100,
+        "sizes": []
+       },
+       "css_classes": "msh-card"
+      },
+      "elements": [
+       {
+        "id": "f4800a4",
+        "elType": "container",
+        "settings": {
+         "content_width": "full",
+         "flex_direction": "column",
+         "flex_gap": {
+          "column": "14",
+          "row": "14",
+          "isLinked": true,
+          "unit": "px",
+          "size": 14
+         },
+         "css_classes": "msh-card-body",
+         "padding": {
+          "unit": "px",
+          "top": "32",
+          "right": "32",
+          "bottom": "32",
+          "left": "32",
+          "isLinked": true
+         }
+        },
+        "elements": [
+         {
+          "id": "bc6cd2d",
+          "elType": "widget",
+          "settings": {
+           "title": "\u00dcber uns",
+           "header_size": "h6",
+           "_css_classes": "msh-overline"
+          },
+          "elements": [],
+          "isInner": false,
+          "widgetType": "heading"
+         },
+         {
+          "id": "1b2cd17",
+          "elType": "widget",
+          "settings": {
+           "title": "Ihr Experte",
+           "header_size": "h3"
+          },
+          "elements": [],
+          "isInner": false,
+          "widgetType": "heading"
+         },
+         {
+          "id": "fbf4100",
+          "elType": "widget",
+          "settings": {
+           "editor": "<p><b>Wir sind Ihr Partner wenn es darum geht Ihre Tr\u00e4ume zu realisieren.</b> Vergessen Sie das Wort Saunabauer! Stellen Sie sich vor, Sie k\u00f6nnten <b>jederzeit ganz spontan zu Hause saunieren</b>: einfach entspannen, loslassen und den Alltag vergessen. Und das in einer <b>Design-Sauna</b>, die nicht nur optisch begeistert, sondern in der Sie sich mit einem <b>wohlig-entspannten Gef\u00fchl</b> zur\u00fccklehnen und relaxen k\u00f6nnen.</p>"
+          },
+          "elements": [],
+          "isInner": false,
+          "widgetType": "text-editor"
+         }
+        ],
+        "isInner": true
+       }
+      ],
+      "isInner": true
+     }
+    ],
+    "isInner": true
+   }
+  ],
+  "isInner": false
+ },
+ {
+  "id": "7b3075c",
+  "elType": "container",
+  "settings": {
+   "content_width": "boxed",
+   "flex_direction": "column",
+   "flex_gap": {
+    "column": "32",
+    "row": "32",
+    "isLinked": true,
+    "unit": "px",
+    "size": 32
+   },
+   "background_background": "classic",
+   "background_color": "#1F1F1F",
+   "padding": {
+    "unit": "px",
+    "top": "96",
+    "right": "24",
+    "bottom": "96",
+    "left": "24",
+    "isLinked": false
+   },
+   "padding_tablet": {
+    "unit": "px",
+    "top": "67",
+    "right": "24",
+    "bottom": "67",
+    "left": "24",
+    "isLinked": false
+   },
+   "padding_mobile": {
+    "unit": "px",
+    "top": "48",
+    "right": "20",
+    "bottom": "48",
+    "left": "20",
+    "isLinked": false
+   }
+  },
+  "elements": [
+   {
+    "id": "711f333",
+    "elType": "container",
+    "settings": {
+     "content_width": "full",
+     "flex_direction": "row",
+     "flex_wrap": "nowrap",
+     "flex_wrap_tablet": "wrap",
+     "flex_gap": {
+      "column": "56",
+      "row": "56",
+      "isLinked": true,
+      "unit": "px",
+      "size": 56
+     },
+     "flex_align_items": "center",
+     "flex_direction_mobile": "column",
+     "flex_direction_tablet": "row"
+    },
+    "elements": [
+     {
+      "id": "a739f2e",
+      "elType": "container",
+      "settings": {
+       "content_width": "full",
+       "flex_direction": "column",
+       "flex_gap": {
+        "column": "22",
+        "row": "22",
+        "isLinked": true,
+        "unit": "px",
+        "size": 22
+       },
+       "width": {
+        "unit": "%",
+        "size": 50,
+        "sizes": []
+       },
+       "width_tablet": {
+        "unit": "%",
+        "size": 100,
+        "sizes": []
+       },
+       "width_mobile": {
+        "unit": "%",
+        "size": 100,
+        "sizes": []
+       }
+      },
+      "elements": [
+       {
+        "id": "bac490f",
+        "elType": "widget",
+        "settings": {
+         "title": "Vermietung",
+         "header_size": "h6",
+         "_css_classes": "msh-overline"
+        },
+        "elements": [],
+        "isInner": false,
+        "widgetType": "heading"
+       },
+       {
+        "id": "3de6eb0",
+        "elType": "widget",
+        "settings": {
+         "title": "Ihr mobiles Wellness-Erlebnis: Sauna und Whirlpool mieten",
+         "header_size": "h2",
+         "_css_classes": "msh-title-line"
+        },
+        "elements": [],
+        "isInner": false,
+        "widgetType": "heading"
+       },
+       {
+        "id": "c9643f0",
+        "elType": "widget",
+        "settings": {
+         "editor": "<p><b>Sehnen Sie sich nach einer luxuri\u00f6sen Auszeit, ganz ohne Reiseaufwand?</b></p><p>Wir machen es m\u00f6glich: Erleben Sie die Tiefenentspannung einer <b>mobilen Fasssauna</b> und das sprudelnde Vergn\u00fcgen eines <b>mobilen Whirlpools</b> \u2013 und das genau dort, wo Sie es sich w\u00fcnschen.</p><ul><li><p><b>100 % Privat:</b> Genie\u00dfen Sie intime Wellness-Momente in Ihrer gewohnten Umgebung, im Garten, auf der Terrasse oder in den eigenen vier W\u00e4nden.</p></li><li><p><b>100 % Flexibel:</b> Oder wie w\u00e4re es mit einem <b>au\u00dfergew\u00f6hnlichen Wellness-Event</b> an einem Ort Ihrer Wahl? Ob am See, in den Bergen oder an einem besonderen Veranstaltungsort \u2013 wir realisieren Ihr einmaliges Entspannungserlebnis.</p></li></ul><p><b>Wir bringen die komplette Wellness-Oase direkt zu Ihrem Wunschort!</b></p><p><b>Entdecken Sie jetzt die Freiheit der mobilen Entspannung und verwandeln Sie Ihren Alltag in einen spontanen Kurzurlaub.</b> Sind Sie bereit f\u00fcr Ihr einzigartiges Spa-Erlebnis?</p>"
+        },
+        "elements": [],
+        "isInner": false,
+        "widgetType": "text-editor"
+       }
+      ],
+      "isInner": true
+     },
+     {
+      "id": "4fc3080",
+      "elType": "container",
+      "settings": {
+       "content_width": "full",
+       "flex_direction": "column",
+       "flex_gap": {
+        "column": "20",
+        "row": "20",
+        "isLinked": true,
+        "unit": "px",
+        "size": 20
+       },
+       "width": {
+        "unit": "%",
+        "size": 50,
+        "sizes": []
+       },
+       "width_tablet": {
+        "unit": "%",
+        "size": 100,
+        "sizes": []
+       },
+       "width_mobile": {
+        "unit": "%",
+        "size": 100,
+        "sizes": []
+       }
+      },
+      "elements": [
+       {
+        "id": "f459ccd",
+        "elType": "container",
+        "settings": {
+         "content_width": "full",
+         "flex_direction": "row",
+         "flex_wrap": "nowrap",
+         "flex_wrap_tablet": "wrap",
+         "flex_gap": {
+          "column": "20",
+          "row": "20",
+          "isLinked": true,
+          "unit": "px",
+          "size": 20
+         },
+         "flex_align_items": "stretch",
+         "flex_direction_mobile": "column",
+         "flex_direction_tablet": "row"
+        },
+        "elements": [
+         {
+          "id": "9d42830",
+          "elType": "container",
+          "settings": {
+           "content_width": "full",
+           "flex_direction": "column",
+           "flex_gap": {
+            "column": "0",
+            "row": "0",
+            "isLinked": true,
+            "unit": "px",
+            "size": 0
+           },
+           "width": {
+            "unit": "%",
+            "size": 48,
+            "sizes": []
+           },
+           "width_tablet": {
+            "unit": "%",
+            "size": 48,
+            "sizes": []
+           },
+           "width_mobile": {
+            "unit": "%",
+            "size": 100,
+            "sizes": []
+           },
+           "css_classes": "msh-card"
+          },
+          "elements": [
+           {
+            "id": "dd6bb51",
+            "elType": "widget",
+            "settings": {
+             "image": {
+              "url": "https://mobilesauna-hamburg.de/wp-content/uploads/2026/09/mobile-sauna.jpg",
+              "id": 2033,
+              "alt": "Mobile-Sauna",
+              "source": "library"
+             },
+             "image_size": "full",
+             "_css_classes": "msh-card-img"
+            },
+            "elements": [],
+            "isInner": false,
+            "widgetType": "image"
+           },
+           {
+            "id": "939a3aa",
+            "elType": "container",
+            "settings": {
+             "content_width": "full",
+             "flex_direction": "column",
+             "flex_gap": {
+              "column": "14",
+              "row": "14",
+              "isLinked": true,
+              "unit": "px",
+              "size": 14
+             },
+             "css_classes": "msh-card-body"
+            },
+            "elements": [
+             {
+              "id": "2a9afc7",
+              "elType": "widget",
+              "settings": {
+               "text": "Mobile-Sauna",
+               "link": {
+                "url": "/sauna/#mobilesauna",
+                "is_external": "",
+                "nofollow": ""
+               },
+               "size": "md",
+               "_css_classes": "msh-btn-full"
+              },
+              "elements": [],
+              "isInner": false,
+              "widgetType": "button"
+             }
+            ],
+            "isInner": true
+           }
+          ],
+          "isInner": true
+         },
+         {
+          "id": "73cbcad",
+          "elType": "container",
+          "settings": {
+           "content_width": "full",
+           "flex_direction": "column",
+           "flex_gap": {
+            "column": "0",
+            "row": "0",
+            "isLinked": true,
+            "unit": "px",
+            "size": 0
+           },
+           "width": {
+            "unit": "%",
+            "size": 48,
+            "sizes": []
+           },
+           "width_tablet": {
+            "unit": "%",
+            "size": 48,
+            "sizes": []
+           },
+           "width_mobile": {
+            "unit": "%",
+            "size": 100,
+            "sizes": []
+           },
+           "css_classes": "msh-card"
+          },
+          "elements": [
+           {
+            "id": "1e28bde",
+            "elType": "widget",
+            "settings": {
+             "image": {
+              "url": "https://mobilesauna-hamburg.de/wp-content/uploads/2026/09/whirlpool.jpg",
+              "id": 2037,
+              "alt": "Mobiler Whirlpool",
+              "source": "library"
+             },
+             "image_size": "full",
+             "_css_classes": "msh-card-img"
+            },
+            "elements": [],
+            "isInner": false,
+            "widgetType": "image"
+           },
+           {
+            "id": "bdcfbef",
+            "elType": "container",
+            "settings": {
+             "content_width": "full",
+             "flex_direction": "column",
+             "flex_gap": {
+              "column": "14",
+              "row": "14",
+              "isLinked": true,
+              "unit": "px",
+              "size": 14
+             },
+             "css_classes": "msh-card-body"
+            },
+            "elements": [
+             {
+              "id": "0df136e",
+              "elType": "widget",
+              "settings": {
+               "text": "Mobiler-Whirlpool",
+               "link": {
+                "url": "/mobil/#infowhirlpool",
+                "is_external": "",
+                "nofollow": ""
+               },
+               "size": "md",
+               "_css_classes": "msh-btn-full"
+              },
+              "elements": [],
+              "isInner": false,
+              "widgetType": "button"
+             }
+            ],
+            "isInner": true
+           }
+          ],
+          "isInner": true
+         }
+        ],
+        "isInner": true
+       }
+      ],
+      "isInner": true
+     }
+    ],
+    "isInner": true
+   }
+  ],
+  "isInner": false
+ },
+ {
+  "id": "5900c86",
+  "elType": "container",
+  "settings": {
+   "content_width": "boxed",
+   "flex_direction": "column",
+   "flex_gap": {
+    "column": "32",
+    "row": "32",
+    "isLinked": true,
+    "unit": "px",
+    "size": 32
+   },
+   "background_background": "classic",
+   "background_color": "#1A1A1A",
+   "padding": {
+    "unit": "px",
+    "top": "96",
+    "right": "24",
+    "bottom": "96",
+    "left": "24",
+    "isLinked": false
+   },
+   "padding_tablet": {
+    "unit": "px",
+    "top": "67",
+    "right": "24",
+    "bottom": "67",
+    "left": "24",
+    "isLinked": false
+   },
+   "padding_mobile": {
+    "unit": "px",
+    "top": "48",
+    "right": "20",
+    "bottom": "48",
+    "left": "20",
+    "isLinked": false
+   }
+  },
+  "elements": [
+   {
+    "id": "323a654",
+    "elType": "widget",
+    "settings": {
+     "title": "So einfach geht's",
+     "header_size": "h6",
+     "align": "center",
+     "_css_classes": "msh-overline"
+    },
+    "elements": [],
+    "isInner": false,
+    "widgetType": "heading"
+   },
+   {
+    "id": "cb20923",
+    "elType": "widget",
+    "settings": {
+     "title": "In 3 Schritten zur mobilen Sauna",
+     "header_size": "h2",
+     "align": "center",
+     "_css_classes": "msh-title-line msh-center"
+    },
+    "elements": [],
+    "isInner": false,
+    "widgetType": "heading"
+   },
+   {
+    "id": "6f3be37",
+    "elType": "container",
+    "settings": {
+     "content_width": "full",
+     "flex_direction": "row",
+     "flex_wrap": "nowrap",
+     "flex_wrap_tablet": "wrap",
+     "flex_gap": {
+      "column": "24",
+      "row": "24",
+      "isLinked": true,
+      "unit": "px",
+      "size": 24
+     },
+     "flex_align_items": "stretch",
+     "flex_direction_mobile": "column",
+     "flex_direction_tablet": "row"
+    },
+    "elements": [
+     {
+      "id": "b05a054",
+      "elType": "container",
+      "settings": {
+       "content_width": "full",
+       "flex_direction": "column",
+       "flex_gap": {
+        "column": "0",
+        "row": "0",
+        "isLinked": true,
+        "unit": "px",
+        "size": 0
+       },
+       "width": {
+        "unit": "%",
+        "size": 33,
+        "sizes": []
+       },
+       "width_tablet": {
+        "unit": "%",
+        "size": 48,
+        "sizes": []
+       },
+       "width_mobile": {
+        "unit": "%",
+        "size": 100,
+        "sizes": []
+       },
+       "css_classes": "msh-card"
+      },
+      "elements": [
+       {
+        "id": "71a7cd0",
+        "elType": "container",
+        "settings": {
+         "content_width": "full",
+         "flex_direction": "column",
+         "flex_gap": {
+          "column": "14",
+          "row": "14",
+          "isLinked": true,
+          "unit": "px",
+          "size": 14
+         },
+         "css_classes": "msh-card-body"
+        },
+        "elements": [
+         {
+          "id": "cb0d735",
+          "elType": "widget",
+          "settings": {
+           "selected_icon": {
+            "value": "fas fa-calendar-alt",
+            "library": "fa-solid"
+           },
+           "title_text": "1. Termin buchen",
+           "description_text": "Datum w\u00e4hlen und direkt Online buchen",
+           "position": "top",
+           "primary_color": "#CFA63D",
+           "_css_classes": "msh-iconbox"
+          },
+          "elements": [],
+          "isInner": false,
+          "widgetType": "icon-box"
+         }
+        ],
+        "isInner": true
+       }
+      ],
+      "isInner": true
+     },
+     {
+      "id": "1b00f5b",
+      "elType": "container",
+      "settings": {
+       "content_width": "full",
+       "flex_direction": "column",
+       "flex_gap": {
+        "column": "0",
+        "row": "0",
+        "isLinked": true,
+        "unit": "px",
+        "size": 0
+       },
+       "width": {
+        "unit": "%",
+        "size": 33,
+        "sizes": []
+       },
+       "width_tablet": {
+        "unit": "%",
+        "size": 48,
+        "sizes": []
+       },
+       "width_mobile": {
+        "unit": "%",
+        "size": 100,
+        "sizes": []
+       },
+       "css_classes": "msh-card"
+      },
+      "elements": [
+       {
+        "id": "cf947c8",
+        "elType": "container",
+        "settings": {
+         "content_width": "full",
+         "flex_direction": "column",
+         "flex_gap": {
+          "column": "14",
+          "row": "14",
+          "isLinked": true,
+          "unit": "px",
+          "size": 14
+         },
+         "css_classes": "msh-card-body"
+        },
+        "elements": [
+         {
+          "id": "9c21b0e",
+          "elType": "widget",
+          "settings": {
+           "selected_icon": {
+            "value": "fas fa-truck",
+            "library": "fa-solid"
+           },
+           "title_text": "2. Transportart w\u00e4hlen",
+           "description_text": "Die Sauna an einem Wunschort anliefern lassen oder selbst abholen",
+           "position": "top",
+           "primary_color": "#CFA63D",
+           "_css_classes": "msh-iconbox"
+          },
+          "elements": [],
+          "isInner": false,
+          "widgetType": "icon-box"
+         }
+        ],
+        "isInner": true
+       }
+      ],
+      "isInner": true
+     },
+     {
+      "id": "3c0946f",
+      "elType": "container",
+      "settings": {
+       "content_width": "full",
+       "flex_direction": "column",
+       "flex_gap": {
+        "column": "0",
+        "row": "0",
+        "isLinked": true,
+        "unit": "px",
+        "size": 0
+       },
+       "width": {
+        "unit": "%",
+        "size": 33,
+        "sizes": []
+       },
+       "width_tablet": {
+        "unit": "%",
+        "size": 48,
+        "sizes": []
+       },
+       "width_mobile": {
+        "unit": "%",
+        "size": 100,
+        "sizes": []
+       },
+       "css_classes": "msh-card"
+      },
+      "elements": [
+       {
+        "id": "a35bb42",
+        "elType": "container",
+        "settings": {
+         "content_width": "full",
+         "flex_direction": "column",
+         "flex_gap": {
+          "column": "14",
+          "row": "14",
+          "isLinked": true,
+          "unit": "px",
+          "size": 14
+         },
+         "css_classes": "msh-card-body"
+        },
+        "elements": [
+         {
+          "id": "4b91165",
+          "elType": "widget",
+          "settings": {
+           "selected_icon": {
+            "value": "fas fa-hot-tub",
+            "library": "fa-solid"
+           },
+           "title_text": "3. Saunieren &amp; genie\u00dfen",
+           "description_text": "mit bis zu 6 Personen ganz privat saunieren &amp; genie\u00dfen",
+           "position": "top",
+           "primary_color": "#CFA63D",
+           "_css_classes": "msh-iconbox"
+          },
+          "elements": [],
+          "isInner": false,
+          "widgetType": "icon-box"
+         }
+        ],
+        "isInner": true
+       }
+      ],
+      "isInner": true
+     }
+    ],
+    "isInner": true
+   }
+  ],
+  "isInner": false
+ },
+ {
+  "id": "98dafec",
+  "elType": "container",
+  "settings": {
+   "content_width": "boxed",
+   "flex_direction": "column",
+   "flex_gap": {
+    "column": "32",
+    "row": "32",
+    "isLinked": true,
+    "unit": "px",
+    "size": 32
+   },
+   "background_background": "classic",
+   "background_color": "#1F1F1F",
+   "padding": {
+    "unit": "px",
+    "top": "96",
+    "right": "24",
+    "bottom": "96",
+    "left": "24",
+    "isLinked": false
+   },
+   "padding_tablet": {
+    "unit": "px",
+    "top": "67",
+    "right": "24",
+    "bottom": "67",
+    "left": "24",
+    "isLinked": false
+   },
+   "padding_mobile": {
+    "unit": "px",
+    "top": "48",
+    "right": "20",
+    "bottom": "48",
+    "left": "20",
+    "isLinked": false
+   }
+  },
+  "elements": [
+   {
+    "id": "d606dd4",
+    "elType": "widget",
+    "settings": {
+     "title": "Bewertungen",
+     "header_size": "h6",
+     "align": "center",
+     "_css_classes": "msh-overline"
+    },
+    "elements": [],
+    "isInner": false,
+    "widgetType": "heading"
+   },
+   {
+    "id": "c19feab",
+    "elType": "widget",
+    "settings": {
+     "title": "Was unsere Kunden sagen",
+     "header_size": "h2",
+     "align": "center",
+     "_css_classes": "msh-title-line msh-center"
+    },
+    "elements": [],
+    "isInner": false,
+    "widgetType": "heading"
+   },
+   {
+    "id": "c70b927",
+    "elType": "container",
+    "settings": {
+     "content_width": "full",
+     "flex_direction": "row",
+     "flex_wrap": "nowrap",
+     "flex_wrap_tablet": "wrap",
+     "flex_gap": {
+      "column": "24",
+      "row": "24",
+      "isLinked": true,
+      "unit": "px",
+      "size": 24
+     },
+     "flex_align_items": "stretch",
+     "flex_direction_mobile": "column",
+     "flex_direction_tablet": "row"
+    },
+    "elements": [
+     {
+      "id": "7fe6de0",
+      "elType": "container",
+      "settings": {
+       "content_width": "full",
+       "flex_direction": "column",
+       "flex_gap": {
+        "column": "0",
+        "row": "0",
+        "isLinked": true,
+        "unit": "px",
+        "size": 0
+       },
+       "width": {
+        "unit": "%",
+        "size": 33,
+        "sizes": []
+       },
+       "width_tablet": {
+        "unit": "%",
+        "size": 48,
+        "sizes": []
+       },
+       "width_mobile": {
+        "unit": "%",
+        "size": 100,
+        "sizes": []
+       },
+       "css_classes": "msh-card"
+      },
+      "elements": [
+       {
+        "id": "7d3f3b7",
+        "elType": "container",
+        "settings": {
+         "content_width": "full",
+         "flex_direction": "column",
+         "flex_gap": {
+          "column": "14",
+          "row": "14",
+          "isLinked": true,
+          "unit": "px",
+          "size": 14
+         },
+         "css_classes": "msh-card-body",
+         "padding": {
+          "unit": "px",
+          "top": "28",
+          "right": "28",
+          "bottom": "28",
+          "left": "28",
+          "isLinked": true
+         }
+        },
+        "elements": [
+         {
+          "id": "2caabf3",
+          "elType": "widget",
+          "settings": {
+           "title": "\u2605\u2605\u2605\u2605\u2605",
+           "header_size": "h5",
+           "title_color": "#CFA63D"
+          },
+          "elements": [],
+          "isInner": false,
+          "widgetType": "heading"
+         },
+         {
+          "id": "714a3f5",
+          "elType": "widget",
+          "settings": {
+           "editor": "Von Anfang bis Ende war alles reibungslos und professionell. Ich h\u00e4tte mir keinen besseren Service w\u00fcnschen k\u00f6nnen. Sehr zu empfehlen!"
+          },
+          "elements": [],
+          "isInner": false,
+          "widgetType": "text-editor"
+         },
+         {
+          "id": "a540b00",
+          "elType": "widget",
+          "settings": {
+           "editor": "<strong>Hat meine Erwartungen \u00fcbertroffen!</strong>",
+           "text_color": "#B8B8B8"
+          },
+          "elements": [],
+          "isInner": false,
+          "widgetType": "text-editor"
+         }
+        ],
+        "isInner": true
+       }
+      ],
+      "isInner": true
+     },
+     {
+      "id": "3898921",
+      "elType": "container",
+      "settings": {
+       "content_width": "full",
+       "flex_direction": "column",
+       "flex_gap": {
+        "column": "0",
+        "row": "0",
+        "isLinked": true,
+        "unit": "px",
+        "size": 0
+       },
+       "width": {
+        "unit": "%",
+        "size": 33,
+        "sizes": []
+       },
+       "width_tablet": {
+        "unit": "%",
+        "size": 48,
+        "sizes": []
+       },
+       "width_mobile": {
+        "unit": "%",
+        "size": 100,
+        "sizes": []
+       },
+       "css_classes": "msh-card"
+      },
+      "elements": [
+       {
+        "id": "bf63348",
+        "elType": "container",
+        "settings": {
+         "content_width": "full",
+         "flex_direction": "column",
+         "flex_gap": {
+          "column": "14",
+          "row": "14",
+          "isLinked": true,
+          "unit": "px",
+          "size": 14
+         },
+         "css_classes": "msh-card-body",
+         "padding": {
+          "unit": "px",
+          "top": "28",
+          "right": "28",
+          "bottom": "28",
+          "left": "28",
+          "isLinked": true
+         }
+        },
+        "elements": [
+         {
+          "id": "9a5484b",
+          "elType": "widget",
+          "settings": {
+           "title": "\u2605\u2605\u2605\u2605\u2605",
+           "header_size": "h5",
+           "title_color": "#CFA63D"
+          },
+          "elements": [],
+          "isInner": false,
+          "widgetType": "heading"
+         },
+         {
+          "id": "df23004",
+          "elType": "widget",
+          "settings": {
+           "editor": "Wir sch\u00e4tzen den hervorragenden Service wirklich! Das Feedback war fantastisch und motiviert uns zur Verbesserung."
+          },
+          "elements": [],
+          "isInner": false,
+          "widgetType": "text-editor"
+         },
+         {
+          "id": "def52c2",
+          "elType": "widget",
+          "settings": {
+           "editor": "<strong>Zuverl\u00e4ssig und vertrauensw\u00fcrdig</strong>",
+           "text_color": "#B8B8B8"
+          },
+          "elements": [],
+          "isInner": false,
+          "widgetType": "text-editor"
+         }
+        ],
+        "isInner": true
+       }
+      ],
+      "isInner": true
+     },
+     {
+      "id": "d525d8d",
+      "elType": "container",
+      "settings": {
+       "content_width": "full",
+       "flex_direction": "column",
+       "flex_gap": {
+        "column": "0",
+        "row": "0",
+        "isLinked": true,
+        "unit": "px",
+        "size": 0
+       },
+       "width": {
+        "unit": "%",
+        "size": 33,
+        "sizes": []
+       },
+       "width_tablet": {
+        "unit": "%",
+        "size": 48,
+        "sizes": []
+       },
+       "width_mobile": {
+        "unit": "%",
+        "size": 100,
+        "sizes": []
+       },
+       "css_classes": "msh-card"
+      },
+      "elements": [
+       {
+        "id": "fc7ce6a",
+        "elType": "container",
+        "settings": {
+         "content_width": "full",
+         "flex_direction": "column",
+         "flex_gap": {
+          "column": "14",
+          "row": "14",
+          "isLinked": true,
+          "unit": "px",
+          "size": 14
+         },
+         "css_classes": "msh-card-body",
+         "padding": {
+          "unit": "px",
+          "top": "28",
+          "right": "28",
+          "bottom": "28",
+          "left": "28",
+          "isLinked": true
+         }
+        },
+        "elements": [
+         {
+          "id": "3f43a8a",
+          "elType": "widget",
+          "settings": {
+           "title": "\u2605\u2605\u2605\u2605\u2605",
+           "header_size": "h5",
+           "title_color": "#CFA63D"
+          },
+          "elements": [],
+          "isInner": false,
+          "widgetType": "heading"
+         },
+         {
+          "id": "a95d128",
+          "elType": "widget",
+          "settings": {
+           "editor": "Ich war beeindruckt, wie schnell sie auf meine Anfragen geantwortet haben. Die Qualit\u00e4t der Arbeit entsprach den positiven Bewertungen."
+          },
+          "elements": [],
+          "isInner": false,
+          "widgetType": "text-editor"
+         },
+         {
+          "id": "3b8059f",
+          "elType": "widget",
+          "settings": {
+           "editor": "<strong>Fantastischer Service, sehr zu empfehlen!</strong>",
+           "text_color": "#B8B8B8"
+          },
+          "elements": [],
+          "isInner": false,
+          "widgetType": "text-editor"
+         }
+        ],
+        "isInner": true
+       }
+      ],
+      "isInner": true
+     }
+    ],
+    "isInner": true
+   }
+  ],
+  "isInner": false
+ },
+ {
+  "id": "3a5ae28",
+  "elType": "container",
+  "settings": {
+   "content_width": "boxed",
+   "flex_direction": "column",
+   "flex_gap": {
+    "column": "20",
+    "row": "20",
+    "isLinked": true,
+    "unit": "px",
+    "size": 20
+   },
+   "background_background": "classic",
+   "background_color": "#242424",
+   "padding": {
+    "unit": "px",
+    "top": "88",
+    "right": "24",
+    "bottom": "88",
+    "left": "24",
+    "isLinked": false
+   },
+   "padding_tablet": {
+    "unit": "px",
+    "top": "61",
+    "right": "24",
+    "bottom": "61",
+    "left": "24",
+    "isLinked": false
+   },
+   "padding_mobile": {
+    "unit": "px",
+    "top": "44",
+    "right": "20",
+    "bottom": "44",
+    "left": "20",
+    "isLinked": false
+   }
+  },
+  "elements": [
+   {
+    "id": "6cf22e2",
+    "elType": "widget",
+    "settings": {
+     "title": "Buchung",
+     "header_size": "h6",
+     "align": "center",
+     "_css_classes": "msh-overline"
+    },
+    "elements": [],
+    "isInner": false,
+    "widgetType": "heading"
+   },
+   {
+    "id": "a3a9651",
+    "elType": "widget",
+    "settings": {
+     "title": "Bereit f\u00fcr Ihre Auszeit?",
+     "header_size": "h2",
+     "align": "center"
+    },
+    "elements": [],
+    "isInner": false,
+    "widgetType": "heading"
+   },
+   {
+    "id": "9d4794c",
+    "elType": "widget",
+    "settings": {
+     "editor": "W\u00e4hlen Sie Ihr Datum und buchen Sie direkt online.",
+     "align": "center",
+     "_css_classes": "msh-lead"
+    },
+    "elements": [],
+    "isInner": false,
+    "widgetType": "text-editor"
+   },
+   {
+    "id": "f08e75e",
+    "elType": "widget",
+    "settings": {
+     "text": "Jetzt buchen",
+     "link": {
+      "url": "/buchung/",
+      "is_external": "",
+      "nofollow": ""
+     },
+     "size": "md",
+     "align": "center"
+    },
+    "elements": [],
+    "isInner": false,
+    "widgetType": "button"
+   }
+  ],
+  "isInner": false
+ }
+]
