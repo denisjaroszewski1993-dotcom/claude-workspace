@@ -17,3 +17,10 @@ Farben: Hintergrund #1C1916 (fast schwarz), Akzent #F2A23A (Sauna-Orange), Schri
 
 Hinweis: Das Foto liegt nur mit 512 px Breite vor (≈ 17 dpi auf 75 cm) – für den Druck
 das Originalbild in hoher Auflösung (mind. ca. 3000 px Breite) einsetzen.
+
+## Druckdatenprüfung (25.09.2026)
+
+`Werbeschild_75x95cm_Druckdatei_CMYK.pdf` ist die Datei für die Druckerei: CMYK, TrimBox 750 × 950 mm,
+BleedBox 756 × 956 mm, Schriften eingebettet, keine Transparenzen, kein Überdrucken, 1 Seite, Hochformat.
+Offen: Foto nur ca. 17 dpi (Original 512 px) → hochaufgelöstes Original nötig.
+CMYK-Umwandlung mit Ghostscript-Standardprofil, nicht mit FOGRA39/PSO Coated v3.
