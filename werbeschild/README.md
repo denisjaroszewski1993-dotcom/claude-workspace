@@ -10,7 +10,8 @@ Montage: Unterkante 110 cm, Oberkante 205 cm über Boden.
 |---|---|---|---|
 | SAUNA | Barlow Condensed ExtraBold, weiß | 16 cm | 50–60 m |
 | BAU & VERMIETUNG | Barlow Condensed SemiBold, orange | 6 cm | 20 m |
-| www.mobilesauna-hamburg.de | Barlow Condensed SemiBold, weiß/orange | 4,2 cm | 12–15 m |
+| EINFAHRT → (Band in Orange) | Barlow Condensed ExtraBold, dunkel | 6,4 cm, Pfeil 12 × 7,4 cm | 20–25 m |
+| 🌐 www.mobilesauna-hamburg.de | Barlow Condensed SemiBold, weiß/orange, Globus-Icon Ø 5 cm | 3,9 cm | 12–15 m |
 
 Farben: Hintergrund #1C1916 (fast schwarz), Akzent #F2A23A (Sauna-Orange), Schrift #FFFFFF.
 
