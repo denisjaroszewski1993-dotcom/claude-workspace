@@ -1,0 +1,7 @@
+node_modules/
+dist/
+dist-artifact/
+public/models/
+*.log
+.DS_Store
+test-results/

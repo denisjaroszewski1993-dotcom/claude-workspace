@@ -1,0 +1,194 @@
+{
+ "note": "Beispielfotos von Unsplash (Unsplash-Lizenz), bezogen über picsum.photos. Aufnahmedaten und Orte sind erfunden.",
+ "photos": [
+  {
+   "file": "p606.jpg",
+   "takenAt": "2025-07-12T10:14:02",
+   "lat": 54.5132,
+   "lon": 13.6398,
+   "place": "Ostseeküste",
+   "author": "Aleksandra Boguslawska",
+   "source": "https://unsplash.com/photos/MS7KD9Ti7FQ"
+  },
+  {
+   "file": "p606-kopie.jpg",
+   "takenAt": "2025-07-12T10:14:05",
+   "lat": 54.5132,
+   "lon": 13.6398,
+   "place": "Ostseeküste",
+   "author": "Aleksandra Boguslawska",
+   "source": "https://unsplash.com/photos/MS7KD9Ti7FQ"
+  },
+  {
+   "file": "p199.jpg",
+   "takenAt": "2025-07-12T10:52:40",
+   "lat": 54.517,
+   "lon": 13.6431,
+   "place": "Ostseeküste",
+   "author": "Beto Galetto",
+   "source": "https://unsplash.com/photos/RL0l7Zk5PxU"
+  },
+  {
+   "file": "p244.jpg",
+   "takenAt": "2025-07-12T12:31:10",
+   "lat": 54.5098,
+   "lon": 13.6502,
+   "place": "Ostseeküste",
+   "author": "Yair Hazout",
+   "source": "https://unsplash.com/photos/Y-eIZ3g8_ko"
+  },
+  {
+   "file": "p431.jpg",
+   "takenAt": "2025-07-12T15:40:22",
+   "lat": 54.5061,
+   "lon": 13.6457,
+   "place": "Ostseeküste",
+   "author": "Carli Jean",
+   "source": "https://unsplash.com/photos/UWRqlJcDCXA"
+  },
+  {
+   "file": "p429.jpg",
+   "takenAt": "2025-07-12T16:05:51",
+   "lat": 54.5061,
+   "lon": 13.6457,
+   "place": "Ostseeküste",
+   "author": "Glen Carrie",
+   "source": "https://unsplash.com/photos/FjjUVn_KHLU"
+  },
+  {
+   "file": "p12.jpg",
+   "takenAt": "2025-07-12T20:48:30",
+   "lat": 54.5201,
+   "lon": 13.6379,
+   "place": "Ostseeküste",
+   "author": "Paul Jarvis",
+   "source": "https://unsplash.com/photos/I_9ILwtsl_k"
+  },
+  {
+   "file": "p609.jpg",
+   "takenAt": "2025-07-13T09:31:12",
+   "lat": 54.5155,
+   "lon": 13.642,
+   "place": "Ostseeküste",
+   "author": "Jeremy Cai",
+   "source": "https://unsplash.com/photos/mnF75FoPBWY"
+  },
+  {
+   "file": "p29.jpg",
+   "takenAt": "2025-08-09T09:12:44",
+   "lat": 47.421,
+   "lon": 11.062,
+   "place": "Werdenfelser Land",
+   "author": "Go Wild",
+   "source": "https://unsplash.com/photos/V0yAek6BgGk"
+  },
+  {
+   "file": "p177.jpg",
+   "takenAt": "2025-08-09T10:40:03",
+   "lat": 47.4172,
+   "lon": 11.0701,
+   "place": "Werdenfelser Land",
+   "author": "Danka & Peter",
+   "source": "https://unsplash.com/photos/tvicgTdh7Fg"
+  },
+  {
+   "file": "p287.jpg",
+   "takenAt": "2025-08-09T12:05:17",
+   "lat": 47.413,
+   "lon": 11.0788,
+   "place": "Werdenfelser Land",
+   "author": "Aleksandra Boguslawska",
+   "source": "https://unsplash.com/photos/c54ZhWDLEDo"
+  },
+  {
+   "file": "p287-unscharf.jpg",
+   "takenAt": "2025-08-09T12:05:19",
+   "lat": 47.413,
+   "lon": 11.0788,
+   "place": "Werdenfelser Land",
+   "author": "Aleksandra Boguslawska",
+   "source": "https://unsplash.com/photos/c54ZhWDLEDo"
+  },
+  {
+   "file": "p237.jpg",
+   "takenAt": "2025-08-09T14:20:36",
+   "lat": 47.4201,
+   "lon": 11.0655,
+   "place": "Werdenfelser Land",
+   "author": "André Spieker",
+   "source": "https://unsplash.com/photos/8wTPqxlnKM4"
+  },
+  {
+   "file": "p434.jpg",
+   "takenAt": "2025-08-10T08:45:00",
+   "lat": 47.4012,
+   "lon": 10.987,
+   "place": "Werdenfelser Land",
+   "author": "Ales Krivec",
+   "source": "https://unsplash.com/photos/DgtRKZOOE0w"
+  },
+  {
+   "file": "p235.jpg",
+   "takenAt": "2025-08-10T11:30:48",
+   "lat": 47.4061,
+   "lon": 10.9902,
+   "place": "Werdenfelser Land",
+   "author": "Paul E. Harrer",
+   "source": "https://unsplash.com/photos/TI-B-TNYJMU"
+  },
+  {
+   "file": "p419.jpg",
+   "takenAt": "2025-10-03T11:20:09",
+   "lat": 52.5219,
+   "lon": 13.4132,
+   "place": "Großstadt",
+   "author": "POR7O",
+   "source": "https://unsplash.com/photos/mS1pAG_bi5Y"
+  },
+  {
+   "file": "p437.jpg",
+   "takenAt": "2025-10-03T13:10:55",
+   "lat": 52.5245,
+   "lon": 13.405,
+   "place": "Großstadt",
+   "author": "Bonnie Meisels",
+   "source": "https://unsplash.com/photos/Y5uyOoct2pg"
+  },
+  {
+   "file": "p395.jpg",
+   "takenAt": "2025-10-03T19:45:31",
+   "lat": 52.52,
+   "lon": 13.4101,
+   "place": "Großstadt",
+   "author": "Dogancan Ozturan",
+   "source": "https://unsplash.com/photos/94taEmdowRw"
+  },
+  {
+   "file": "p452.jpg",
+   "takenAt": "2025-10-03T22:30:02",
+   "lat": 52.5163,
+   "lon": 13.3777,
+   "place": "Großstadt",
+   "author": "Desi Mendoza",
+   "source": "https://unsplash.com/photos/CuSHBGBdXc0"
+  },
+  {
+   "file": "p274.jpg",
+   "takenAt": "2025-10-03T23:41:18",
+   "lat": 52.517,
+   "lon": 13.3889,
+   "place": "Großstadt",
+   "author": "Wojtek Witkowski",
+   "source": "https://unsplash.com/photos/h7rOzTmGxWE"
+  },
+  {
+   "file": "p249.jpg",
+   "takenAt": "2025-10-04T20:15:40",
+   "lat": 52.5025,
+   "lon": 13.4451,
+   "place": "Großstadt",
+   "author": "Anders Jildén",
+   "source": "https://unsplash.com/photos/nrLtvA05jk8"
+  }
+ ]
+}
