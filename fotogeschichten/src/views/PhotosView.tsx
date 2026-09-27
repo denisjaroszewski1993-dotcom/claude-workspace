@@ -4,7 +4,7 @@ import type { CategoryId } from "../types";
 import { CATEGORIES, effectiveCategories } from "../lib/categories";
 import { useStore } from "../state/store";
 import { useUi } from "../state/ui";
-import { CategoryChip, Empty, PhotoMount } from "../components/common";
+import { CategoryChip, Empty, PhotoMount, ShowMore, usePaged } from "../components/common";
 import { categoryCounts } from "./Overview";
 
 export function PhotosView({ filter, onFilter }: { filter: CategoryId | "alle"; onFilter: (f: CategoryId | "alle") => void }) {
@@ -22,7 +22,8 @@ export function PhotosView({ filter, onFilter }: { filter: CategoryId | "alle"; 
       return newestFirst ? -d : d;
     });
   }, [photos, filter, newestFirst]);
-  const ids = visible.map((p) => p.id);
+  const ids = useMemo(() => visible.map((p) => p.id), [visible]);
+  const paged = usePaged(visible, 240, `${filter}-${newestFirst}`);
 
   const toggle = (id: string) =>
     setSelected((s) => {
@@ -74,7 +75,7 @@ export function PhotosView({ filter, onFilter }: { filter: CategoryId | "alle"; 
         </Empty>
       ) : (
         <div className="grid">
-          {visible.map((p) => (
+          {paged.shown.map((p) => (
             <PhotoMount
               key={p.id}
               photo={p}
@@ -85,6 +86,7 @@ export function PhotosView({ filter, onFilter }: { filter: CategoryId | "alle"; 
           ))}
         </div>
       )}
+      <ShowMore paged={paged} noun="Fotos" />
 
       {selecting && (
         <div className="selection-bar" role="region" aria-label="Auswahl">

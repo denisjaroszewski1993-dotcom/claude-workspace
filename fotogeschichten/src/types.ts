@@ -95,9 +95,19 @@ export interface CategoryScore {
 
 export type PhotoStatus = "wartet" | "fertig" | "fehler";
 
+export interface NativeRef {
+  /** localIdentifier des Fotos in der iOS-Mediathek */
+  id: string;
+  screenshot: boolean;
+  favorite: boolean;
+}
+
 export interface Photo {
   id: string;
-  file: File;
+  /** Datei aus Auswahl, Ordner oder ZIP – fehlt bei Fotos direkt aus der iPhone-Mediathek */
+  file?: File;
+  /** Verweis in die iPhone-Mediathek (nur in der App) */
+  native?: NativeRef;
   name: string;
   size: number;
   type: string;
@@ -113,7 +123,7 @@ export interface Photo {
   height?: number;
 
   takenAt?: number;
-  dateSource?: "exif" | "dateiname" | "datei";
+  dateSource?: "exif" | "dateiname" | "datei" | "mediathek";
   gps?: GeoPoint;
   /** Ortsname aus Metadaten, Beispieldaten oder OpenStreetMap */
   place?: string;

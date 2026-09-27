@@ -37,7 +37,9 @@ export function groupForChapters(photos: Photo[], kind: StorySource["kind"]): Gr
       for (const p of dated) {
         const d = new Date(p.takenAt!);
         const key = `${d.getFullYear()}-${d.getMonth()}`;
-        byMonth.set(key, [...(byMonth.get(key) ?? []), p]);
+        const list = byMonth.get(key);
+        if (list) list.push(p);
+        else byMonth.set(key, [p]);
       }
       for (const list of byMonth.values()) groups.push({ photos: list, month: new Date(list[0].takenAt!).getMonth() });
     } else {
@@ -110,6 +112,7 @@ export function selectPhotos(photos: Photo[], count: number, focus: CategoryId[]
     const cats = effectiveCategories(p);
     if (cats.some((c) => focus.includes(c))) s += 0.12;
     if (peopleIn(p) > 0) s += 0.08;
+    if (p.native?.favorite) s += 0.15; // in der Fotos-App mit Herz markiert
     if (cats[0] === "dokumente") s -= 0.3;
     return s;
   };
@@ -223,8 +226,9 @@ export function buildStory({ photos, source, style, length, seed }: BuildStoryOp
   });
 
   const dated = candidates.filter((p) => p.takenAt !== undefined).map((p) => p.takenAt!);
-  const start = dated.length ? Math.min(...dated) : undefined;
-  const end = dated.length ? Math.max(...dated) : undefined;
+  // Schleife statt Math.min(...dated): Safari verträgt nur begrenzt viele Argumente.
+  const start = dated.length ? dated.reduce((a, b) => Math.min(a, b)) : undefined;
+  const end = dated.length ? dated.reduce((a, b) => Math.max(a, b)) : undefined;
   const days = new Set(dated.map(dayKey)).size;
   const dominant = dominantCategories(candidates);
   const allChosen = chapters.flatMap((c) => c.photoIds);

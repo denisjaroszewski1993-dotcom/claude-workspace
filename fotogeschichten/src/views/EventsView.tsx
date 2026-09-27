@@ -3,7 +3,7 @@ import type { PhotoEvent } from "../types";
 import { formatRange } from "../lib/events";
 import { useStore } from "../state/store";
 import { useUi } from "../state/ui";
-import { CategoryChip, Empty } from "../components/common";
+import { CategoryChip, Empty, ShowMore, usePaged } from "../components/common";
 
 export function EventCard({ event }: { event: PhotoEvent }) {
   const { state } = useStore();
@@ -59,6 +59,7 @@ export function EventCard({ event }: { event: PhotoEvent }) {
 
 export function EventsView() {
   const { events, state, updateSettings } = useStore();
+  const paged = usePaged(events, 20, String(state.settings.eventGapHours));
   return (
     <section className="section" aria-labelledby="h-erlebnisse">
       <div className="section-head">
@@ -86,11 +87,14 @@ export function EventsView() {
           <p>Sobald Fotos analysiert sind, erscheinen sie hier gruppiert.</p>
         </Empty>
       ) : (
-        <div className="event-list">
-          {events.map((e) => (
-            <EventCard key={e.id} event={e} />
-          ))}
-        </div>
+        <>
+          <div className="event-list">
+            {paged.shown.map((e) => (
+              <EventCard key={e.id} event={e} />
+            ))}
+          </div>
+          <ShowMore paged={paged} noun="Erlebnisse" />
+        </>
       )}
     </section>
   );

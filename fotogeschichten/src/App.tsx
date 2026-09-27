@@ -3,6 +3,8 @@ import { BookOpen, CalendarDays, Compass, Eraser, ImagePlus, Images, LayoutDashb
 import type { CategoryId, StorySource } from "./types";
 import { effectiveCategories } from "./lib/categories";
 import { groupsFromMarks } from "./lib/duplicates";
+import { remaining, type EtaStart } from "./lib/eta";
+import { hasNativeLibrary, PhotoLibrary } from "./lib/nativeLibrary";
 import { useStore } from "./state/store";
 import { UiContext, type Tab, type UiActions } from "./state/ui";
 import { ImportDialog, ImportHero } from "./components/ImportZone";
@@ -28,6 +30,25 @@ const TABS: { id: Tab; label: string; short: string; icon: typeof Images; mobile
   // Auf dem Handy über die Übersicht erreichbar, damit die Leiste lesbar bleibt
   { id: "aufraeumen", label: "Aufräumen", short: "Aufräumen", icon: Eraser, mobile: false },
 ];
+
+/** „noch ca. 12 Min.“ unter dem Fortschrittsbalken. */
+function useEta(total: number, done: number): string | undefined {
+  const start = useRef<EtaStart | undefined>(undefined);
+  const [eta, setEta] = useState<string>();
+  useEffect(() => {
+    if (total === 0 || done >= total) {
+      start.current = undefined;
+      setEta(undefined);
+    } else if (!start.current || done < start.current.done) {
+      // Neuer Durchlauf: ab dem ersten fertigen Foto messen.
+      start.current = done > 0 ? { at: Date.now(), done } : undefined;
+      setEta(undefined);
+    } else {
+      setEta(remaining(start.current, Date.now(), done, total));
+    }
+  }, [total, done]);
+  return eta;
+}
 
 const FIRST_VISIT_KEY = "fotogeschichten.besucht.v1";
 
@@ -60,9 +81,10 @@ export function App() {
   const folderInput = useRef<HTMLInputElement>(null);
   const zipInput = useRef<HTMLInputElement>(null);
 
-  // Beim allerersten Besuch zeigt die App gleich die Beispielfotos.
+  // Beim allerersten Besuch zeigt die App gleich die Beispielfotos –
+  // nicht in der iPhone-App, dort geht es direkt um die eigene Mediathek.
   useEffect(() => {
-    if (isFirstVisit()) void importDemo();
+    if (isFirstVisit() && !hasNativeLibrary()) void importDemo();
   }, [importDemo]);
 
   useEffect(() => {
@@ -113,6 +135,8 @@ export function App() {
     const wakeLock = (navigator as Navigator & { wakeLock?: { request(type: "screen"): Promise<Lock> } }).wakeLock;
     let lock: Lock | undefined;
     let released = false;
+    // In der iPhone-App übernimmt das iOS selbst (zuverlässiger als im Browser).
+    if (hasNativeLibrary()) void PhotoLibrary.keepAwake({ enabled: true }).catch(() => undefined);
     wakeLock
       ?.request("screen")
       .then((l) => {
@@ -123,6 +147,7 @@ export function App() {
     return () => {
       released = true;
       void lock?.release().catch(() => undefined);
+      if (hasNativeLibrary()) void PhotoLibrary.keepAwake({ enabled: false }).catch(() => undefined);
     };
   }, [analysing]);
 
@@ -130,6 +155,7 @@ export function App() {
   const demo = photos.some((p) => p.source === "beispiel");
   const { total, done } = state.progress;
   const busy = analysing;
+  const eta = useEta(total, done);
   const counts: Partial<Record<Tab, number>> = {
     fotos: photos.length,
     erlebnisse: events.filter((e) => e.kind !== "ohne-datum").length,
@@ -165,11 +191,16 @@ export function App() {
               <span className="brand-tag mono">sortieren · erkennen · erzählen</span>
             </div>
             {hasPhotos && (
-              <button type="button" className="btn btn-small btn-quiet" onClick={() => setExportOpen(true)} aria-label="Sortiert speichern">
-                <PackageOpen size={18} /> <span className="hide-narrow">Speichern</span>
+              <button
+                type="button"
+                className="btn btn-small btn-quiet"
+                onClick={() => setExportOpen(true)}
+                aria-label={hasNativeLibrary() ? "In Fotos-Alben sortieren" : "Sortiert speichern"}
+              >
+                <PackageOpen size={18} /> <span className="hide-narrow">{hasNativeLibrary() ? "Sortieren" : "Speichern"}</span>
               </button>
             )}
-            <button type="button" className="btn btn-small btn-primary" onClick={() => setImportOpen(true)}>
+            <button type="button" className="btn btn-small btn-primary" onClick={() => setImportOpen(true)} aria-label="Fotos hinzufügen">
               <ImagePlus size={18} /> <span className="hide-narrow">Fotos hinzufügen</span>
             </button>
             <button type="button" className="btn btn-small btn-quiet btn-icon" onClick={() => setSettingsOpen(true)} aria-label="Einstellungen">
@@ -188,7 +219,7 @@ export function App() {
             <section className="progress" aria-live="polite">
               <div className="progress-row">
                 <strong className="num">
-                  Analysiere {done} von {total} Fotos
+                  Analysiere {done.toLocaleString("de-DE")} von {total.toLocaleString("de-DE")} Fotos{eta ? ` · ${eta}` : ""}
                 </strong>
                 <span className="muted small">{modelNote}</span>
               </div>

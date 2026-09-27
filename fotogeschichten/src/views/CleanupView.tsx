@@ -1,12 +1,15 @@
+import { useMemo } from "react";
 import { Info, RotateCcw } from "lucide-react";
 import type { Photo } from "../types";
 import { groupsFromMarks } from "../lib/duplicates";
+import { hasNativeLibrary } from "../lib/nativeLibrary";
 import { useStore } from "../state/store";
 import { useUi } from "../state/ui";
-import { Empty, PhotoMount } from "../components/common";
+import { Empty, PhotoMount, ShowMore, usePaged } from "../components/common";
 
 function Group({ title, text, photos, action }: { title: string; text: string; photos: Photo[]; action?: React.ReactNode }) {
   const ui = useUi();
+  const paged = usePaged(photos, 120);
   if (!photos.length) return null;
   const ids = photos.map((p) => p.id);
   return (
@@ -21,10 +24,11 @@ function Group({ title, text, photos, action }: { title: string; text: string; p
         {action}
       </div>
       <div className="grid">
-        {photos.map((p) => (
+        {paged.shown.map((p) => (
           <PhotoMount key={p.id} photo={p} onOpen={() => ui.openPhoto(p.id, ids)} />
         ))}
       </div>
+      <ShowMore paged={paged} noun="Fotos" />
     </div>
   );
 }
@@ -33,7 +37,8 @@ export function CleanupView() {
   const { photos, state, setExcluded } = useStore();
   const ui = useUi();
   const done = photos.filter((p) => p.status === "fertig");
-  const groups = groupsFromMarks(done);
+  const groups = useMemo(() => groupsFromMarks(photos.filter((p) => p.status === "fertig")), [photos]);
+  const pagedGroups = usePaged(groups, 30);
   const blurry = done.filter((p) => p.quality?.blurry && !p.duplicateOf && !p.excluded);
   const exposure = done.filter((p) => p.quality && p.quality.exposure !== "ok" && !p.quality.blurry && !p.duplicateOf && !p.excluded);
   const screenshots = done.filter((p) => p.categories[0]?.id === "dokumente" && !p.excluded && !p.duplicateOf);
@@ -56,9 +61,9 @@ export function CleanupView() {
         <span>
           Gelöscht wird nichts – deine Originale bleiben unangetastet. Aussortierte Fotos fehlen in Geschichten und landen beim{" "}
           <button type="button" className="btn-link" onClick={() => ui.openExport()}>
-            Export
+            {hasNativeLibrary() ? "Sortieren" : "Export"}
           </button>{" "}
-          im Ordner „_Aussortiert“. So kannst du sie danach in Ruhe löschen.
+          {hasNativeLibrary() ? "im Album „Aussortiert“ der Fotos-App." : "im Ordner „_Aussortiert“."} So kannst du sie danach in Ruhe löschen.
         </span>
       </div>
 
@@ -78,7 +83,7 @@ export function CleanupView() {
               <p className="section-sub">Das jeweils beste Bild (links, ohne Markierung) bleibt; die übrigen sind als „Doppelt“ markiert und werden in Geschichten übersprungen.</p>
             </div>
           </div>
-          {groups.map((g) => {
+          {pagedGroups.shown.map((g) => {
             const list = [state.photos[g.keepId], ...g.photoIds.filter((id) => id !== g.keepId).map((id) => state.photos[id])].filter(Boolean);
             return (
               <div className="dup-row" key={g.keepId}>
@@ -88,6 +93,7 @@ export function CleanupView() {
               </div>
             );
           })}
+          <ShowMore paged={pagedGroups} noun="Gruppen" />
         </div>
       )}
 

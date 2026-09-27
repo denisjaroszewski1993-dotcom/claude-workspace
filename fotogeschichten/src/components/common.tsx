@@ -1,4 +1,4 @@
-import { useEffect, useRef, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { X } from "lucide-react";
 import type { CategoryId, Photo } from "../types";
 import { CATEGORY_BY_ID, categoryLabel, primaryCategory } from "../lib/categories";
@@ -161,6 +161,50 @@ export function Empty({ title, children }: { title: string; children?: ReactNode
     <div className="empty">
       <h3>{title}</h3>
       {children}
+    </div>
+  );
+}
+
+/**
+ * Lange Listen häppchenweise zeigen – 20.000 Vorschaubilder auf einmal legen
+ * jedes iPhone lahm. `resetKey` wechselt z. B. mit dem Filter und fängt dann
+ * wieder bei der ersten Seite an.
+ */
+export function usePaged<T>(items: T[], pageSize: number, resetKey: string = "") {
+  const [page, setPage] = useState({ key: resetKey, limit: pageSize });
+  let limit = page.limit;
+  if (page.key !== resetKey) {
+    limit = pageSize;
+    setPage({ key: resetKey, limit });
+  }
+  return {
+    shown: items.length > limit ? items.slice(0, limit) : items,
+    rest: Math.max(0, items.length - limit),
+    more: () => setPage((p) => ({ ...p, limit: p.limit + pageSize })),
+    step: pageSize,
+  };
+}
+
+/** Knopf unter einer Liste; lädt beim Hinscrollen von selbst nach. */
+export function ShowMore({ paged, noun }: { paged: { rest: number; more: () => void; step: number }; noun: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const { rest, more } = paged;
+  const moreRef = useRef(more);
+  moreRef.current = more;
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || rest <= 0 || typeof IntersectionObserver === "undefined") return;
+    const observer = new IntersectionObserver((entries) => entries.some((e) => e.isIntersecting) && moreRef.current(), { rootMargin: "600px 0px" });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [rest]);
+  if (rest <= 0) return null;
+  return (
+    <div className="show-more" ref={ref}>
+      <button type="button" className="btn btn-small" onClick={more}>
+        {Math.min(rest, paged.step)} weitere {noun} anzeigen
+      </button>
+      <span className="muted small num">noch {rest}</span>
     </div>
   );
 }

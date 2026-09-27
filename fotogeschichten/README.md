@@ -2,6 +2,8 @@
 
 Eine Web-App, die Fotos automatisch **sortiert**, in **Kategorien** und **Erlebnisse** einteilt und daraus **Bildgeschichten** erzählt – als Erzählung, Märchen oder Tagebuch. Alles läuft im Browser, auch auf dem Handy. Die Fotos verlassen das Gerät nicht.
 
+Als **iPhone-App** liest sie zusätzlich die ganze Fotomediathek samt iCloud direkt ein und sortiert die Fotos in echte Alben der Fotos-App – Anleitung in [IOS.md](IOS.md).
+
 ## Was die App erkennt
 
 | Merkmal | Woher | Wofür |
@@ -28,6 +30,7 @@ Jede Zuordnung ist **erklärbar**: Im Foto-Detail steht, warum ein Bild in einer
   - **Claude** (optional): schreibt freier und sieht je Kapitel ein Vorschaubild – auf claude.ai ohne Schlüssel, selbst gehostet mit eigenem API-Schlüssel
   - Lesen, direkt im Text bearbeiten, als **Diashow** abspielen oder als **eigenständige HTML-Datei** speichern und verschicken
 - **Sortiert speichern**: Kopien als ZIP oder direkt in einen Ordner (Chrome/Edge am Computer), wahlweise nach Kategorie, Datum oder Erlebnis, mit Übersichtstabelle (`Übersicht.csv`)
+- **In Fotos-Alben sortieren** (iPhone-App): Alben wie „Fotogeschichten · Strand und Meer“ direkt in der Fotos-App, ohne Kopien – per Knopfdruck auch wieder entfernbar
 
 ## Fotos hineinholen – auch alle auf einmal aus iCloud
 
@@ -43,7 +46,7 @@ Jede Zuordnung ist **erklärbar**: Im Foto-Detail steht, warum ein Bild in einer
 
 **Alle iCloud-Fotos am Computer:** [icloud.com/photos](https://www.icloud.com/photos/) › ⌘A bzw. Strg+A › Download. iCloud packt bis zu 1.000 Fotos in eine ZIP-Datei; die in der App unter *ZIP-Datei* auswählen oder hineinziehen. Mit *iCloud für Windows* einfach den Ordner „iCloud Fotos“ als *Ganzer Ordner* wählen.
 
-Warum kein direkter Zugriff? Apple bietet Webseiten keine Schnittstelle zur iCloud-Mediathek – das dürfen nur Apps (PhotoKit). Eine echte App-Fassung wäre dafür der nächste Schritt.
+Warum im Browser kein direkter Zugriff? Apple bietet Webseiten keine Schnittstelle zur iCloud-Mediathek – das dürfen nur Apps (PhotoKit). Genau das macht die **iPhone-App** ([IOS.md](IOS.md)): Sie liest die ganze Mediathek, einen Zeitraum oder ein Album ohne Auswählen ein, holt Fotos bei Bedarf aus iCloud und nimmt neue Fotos beim Öffnen automatisch mit.
 
 Der ZIP-Leser (`src/lib/zip.ts`) liest nur das Inhaltsverzeichnis und reicht unkomprimiert gespeicherte Fotos als Ausschnitt der ZIP-Datei weiter, ohne sie in den Arbeitsspeicher zu kopieren. ZIP64-Archive über 4 GB werden unterstützt. Bereits bekannte Fotos erkennt die App am Inhalt und überspringt sie – egal, auf welchem Weg sie kommen.
 
@@ -69,6 +72,7 @@ npm run typecheck      # TypeScript-Prüfung
 npm run build          # fertige App in dist/ – als statische Seite überall hostbar
 npm run build:artifact # zusätzlich dist/artifact.html für claude.ai-Artifacts
 npm run models         # KI-Modelle neu herunterladen
+npm run ios            # iPhone-App bauen und in Xcode öffnen (nur am Mac, siehe IOS.md)
 ```
 
 `dist/` ist eine rein statische Seite (relative Pfade). Sie läuft auf GitHub Pages, Netlify, einem NAS oder jedem Webserver – ein eigenes Backend braucht die App nicht.
@@ -77,6 +81,7 @@ npm run models         # KI-Modelle neu herunterladen
 
 - Analyse, KI-Erkennung und der eingebaute Erzähler laufen vollständig im Browser.
 - Gespeichert wird nur lokal im Browser: Analyseergebnisse samt kleiner Vorschaubilder (IndexedDB), Korrekturen, Einstellungen und Geschichten (localStorage). „Einstellungen › Alles vergessen“ löscht alles.
+- In der iPhone-App liegen zusätzlich die Vorschaubilder (512 px) im App-Ordner. Alben legt die App nur auf Knopfdruck an; Fotos löscht oder verändert sie nie.
 - Nur wenn du es einschaltest:
   - **Ortsnamen**: GPS-Koordinaten (ohne Bilder) gehen an OpenStreetMap Nominatim, höchstens eine Anfrage pro Erlebnis.
   - **Claude**: Gliederung, erkannte Motive und je Kapitel ein Vorschaubild (480 px) gehen an Claude. Selbst gehostet wird dein API-Schlüssel nur in deinem Browser gespeichert und direkt an Anthropic gesendet – nur auf eigenen Geräten verwenden.
@@ -99,8 +104,12 @@ src/
     exporter.ts       ZIP, Ordner-Export, Geschichte als HTML
     zip.ts            Fotos aus ZIP-Dateien lesen (auch ZIP64, ohne Kopie)
     analyze.ts        Analyse-Pipeline + Zwischenspeicher (IndexedDB)
+    nativeLibrary.ts  Brücke zum Swift-Modul der iPhone-App (PhotoKit)
+    libraryImport.ts  Mediathek-Einträge -> Fotos, automatisches Nachladen
+    photoData.ts      Bilddaten aus Datei oder Mediathek
   state/store.tsx     App-Zustand, Warteschlange für die Analyse
   views/, components/ Oberfläche (React)
+ios/                  iPhone-App (Capacitor + ios/App/App/PhotoLibraryPlugin.swift)
 scripts/
   fetch-models.mjs    legt die Modelle nach public/models
   build-artifact.mjs  Fassung für claude.ai-Artifacts
@@ -113,8 +122,8 @@ public/demo/          Beispielfotos (Unsplash-Lizenz) mit erfundenen Daten
 - Beim Hochladen aus der iOS-Fotomediathek kann iOS die **GPS-Daten entfernen**; dann gibt es keine Orte und keine Reiseerkennung. Über *In Dateien sichern* + *Ganzer Ordner* bleiben sie erhalten, solange im Teilen-Menü unter *Optionen* der Standort eingeschaltet ist.
 - Während der Analyse hält die App den Bildschirm wach (wo der Browser es erlaubt), damit das iPhone große Mengen nicht mittendrin pausiert.
 - MobileNet kennt keine Gesichter oder Namen – Personen werden gezählt, nicht erkannt. Das ist Absicht.
-- Sehr große Sammlungen (mehrere tausend Fotos) funktionieren, die erste Analyse dauert aber je nach Gerät einige Minuten; danach hilft der Zwischenspeicher.
-- Mögliche nächste Schritte: Gesichter gruppieren (nur lokal), eine Karte der Aufnahmeorte, PWA zum Installieren auf dem Home-Bildschirm, mehrsprachige Oberfläche.
+- Sehr große Sammlungen (zehntausende Fotos) funktionieren: Raster, Zeitleiste und Erlebnisse laden beim Scrollen nach, die Doppelten-Suche schafft 20.000 Fotos in Sekundenbruchteilen. Die erste Analyse dauert aber je nach Gerät lange (die App zeigt die Restzeit); danach hilft der Zwischenspeicher.
+- Mögliche nächste Schritte: Gesichter gruppieren (nur lokal), eine Karte der Aufnahmeorte, Android-App (Capacitor kann das ebenfalls), mehrsprachige Oberfläche.
 
 ## Lizenzen
 

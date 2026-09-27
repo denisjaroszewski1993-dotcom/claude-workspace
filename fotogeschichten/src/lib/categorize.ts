@@ -16,6 +16,8 @@ export interface CategorizeInput {
   hasCameraExif?: boolean;
   /** Aufnahmezeitpunkt – Tageszeit ist ein starkes Signal für Nacht und Abende */
   takenAt?: number;
+  /** von der iPhone-Mediathek als Bildschirmfoto gekennzeichnet */
+  screenshot?: boolean;
 }
 
 const COCO_GROUPS: Record<string, { cat: CategoryId; de: string }> = {
@@ -98,6 +100,7 @@ const SCREEN_RATIOS = [16 / 9, 19.5 / 9, 20 / 9, 2.16, 4 / 3, 1.6, 1.5];
 const pct = (v: number) => `${Math.round(v * 100)} %`;
 
 export function looksLikeScreenshot(input: CategorizeInput): boolean {
+  if (input.screenshot) return true;
   const name = input.name.toLowerCase();
   if (/screenshot|bildschirmfoto|screen shot|capture d/.test(name)) return true;
   if (input.hasCameraExif) return false;

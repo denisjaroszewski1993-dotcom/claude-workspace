@@ -2,6 +2,7 @@ import type { Photo, PhotoEvent, Story } from "../types";
 import { CATEGORY_BY_ID, categoryLabel, effectiveCategories, primaryCategory } from "./categories";
 import { formatDate, monthName } from "./events";
 import { blobToDataUrl, resizedJpeg } from "./image";
+import { originalBlob, photoBlob } from "./photoData";
 
 // Sortierte Kopien der Fotos als ZIP oder direkt in einen Ordner schreiben.
 // Die Originaldateien bleiben unverändert.
@@ -116,7 +117,7 @@ export async function exportZip(entries: ExportEntry[], onProgress: (done: numbe
         const file = new ZipPassThrough(entry.path);
         if (entry.photo.takenAt !== undefined) file.mtime = entry.photo.takenAt;
         zip.add(file);
-        file.push(new Uint8Array(await entry.photo.file.arrayBuffer()), true);
+        file.push(new Uint8Array(await (await originalBlob(entry.photo)).arrayBuffer()), true);
         onProgress(++done, entries.length);
       }
       const csv = new ZipPassThrough("Übersicht.csv");
@@ -157,7 +158,7 @@ export async function exportToFolder(entries: ExportEntry[], onProgress: (done: 
     const dir = await dirFor(parts.slice(0, -1).join("/"));
     const handle = await dir.getFileHandle(parts[parts.length - 1], { create: true });
     const writable = await handle.createWritable();
-    await writable.write(entry.photo.file);
+    await writable.write(await originalBlob(entry.photo));
     await writable.close();
     onProgress(++done, entries.length);
   }
@@ -180,7 +181,7 @@ export async function storyHtml(story: Story, photos: Record<string, Photo>, onP
   let done = 0;
   for (const id of ids) {
     const photo = photos[id];
-    images.set(id, await blobToDataUrl(await resizedJpeg(photo.file, 1600, 0.84)));
+    images.set(id, await blobToDataUrl(await resizedJpeg(await photoBlob(photo, 1600), 1600, 0.84)));
     onProgress?.(++done, ids.length);
   }
   const figure = (id: string) => {
@@ -240,4 +241,35 @@ ${chapters}
 </body>
 </html>`;
   return new Blob([html], { type: "text/html" });
+}
+
+// ---------------------------------------------------------------------------
+// iPhone-App: in Alben der Fotos-App sortieren (ohne Kopien)
+
+export interface AlbumPlan {
+  title: string;
+  /** localIdentifier der Fotos in der Mediathek */
+  ids: string[];
+}
+
+/** Welche Alben mit welchen Fotos entstehen – gleiche Ordnung wie beim Export in Ordner. */
+export function planAlbums(photos: Photo[], events: PhotoEvent[], options: { structure: ExportStructure; includeSorted: boolean }, prefix: string): AlbumPlan[] {
+  const entries = planExport(
+    photos.filter((p) => p.native && p.status === "fertig"),
+    events,
+    { structure: options.structure, datePrefix: false, includeSorted: options.includeSorted },
+  );
+  const albums = new Map<string, string[]>();
+  for (const { photo, path } of entries) {
+    const folder = path
+      .split("/")
+      .slice(0, -1)
+      .join(" › ")
+      .replace(/^_Aussortiert/, "Aussortiert");
+    const title = prefix + folder;
+    const ids = albums.get(title);
+    if (ids) ids.push(photo.native!.id);
+    else albums.set(title, [photo.native!.id]);
+  }
+  return [...albums.entries()].map(([title, ids]) => ({ title, ids })).sort((a, b) => a.title.localeCompare(b.title, "de"));
 }

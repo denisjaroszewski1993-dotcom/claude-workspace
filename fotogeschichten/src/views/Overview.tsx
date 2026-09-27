@@ -11,7 +11,11 @@ export function categoryCounts(photos: Photo[]): Map<CategoryId, Photo[]> {
   const map = new Map<CategoryId, Photo[]>();
   for (const p of photos) {
     if (p.status !== "fertig") continue;
-    for (const id of effectiveCategories(p)) map.set(id, [...(map.get(id) ?? []), p]);
+    for (const id of effectiveCategories(p)) {
+      const list = map.get(id);
+      if (list) list.push(p);
+      else map.set(id, [p]);
+    }
   }
   return map;
 }
@@ -28,7 +32,7 @@ export function Overview() {
   const dups = done.filter((p) => p.duplicateOf).length;
   const blurry = done.filter((p) => p.quality?.blurry && !p.duplicateOf).length;
   const dated = done.filter((p) => p.takenAt !== undefined).map((p) => p.takenAt!);
-  const range = dated.length ? formatRange(Math.min(...dated), Math.max(...dated)) : undefined;
+  const range = dated.length ? formatRange(dated.reduce((a, b) => Math.min(a, b)), dated.reduce((a, b) => Math.max(a, b))) : undefined;
   const cats = CATEGORIES.filter((c) => byCat.has(c.id)).sort((a, b) => byCat.get(b.id)!.length - byCat.get(a.id)!.length);
 
   return (

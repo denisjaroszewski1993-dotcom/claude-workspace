@@ -2,6 +2,9 @@
 // Auf claude.ai stellt die Umgebung zwei Fähigkeiten bereit: Dateien zum
 // Speichern anbieten ("downloads") und Claude fragen ("sample").
 
+import { Capacitor } from "@capacitor/core";
+import { PhotoLibrary } from "./nativeLibrary";
+
 export interface SampleResult {
   text: string;
   truncated: boolean;
@@ -69,8 +72,28 @@ export class SaveError extends Error {
   }
 }
 
-/** Bietet eine Datei zum Speichern an – auf claude.ai über den Dialog der Umgebung. */
+function blobToBase64(blob: Blob): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result).split(",")[1] ?? "");
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(blob);
+  });
+}
+
+/**
+ * Bietet eine Datei zum Speichern an – auf claude.ai über den Dialog der
+ * Umgebung, in der iPhone-App über das Teilen-Menü (Sichern, AirDrop, Mail …).
+ */
 export async function saveFile(filename: string, data: Blob): Promise<void> {
+  if (Capacitor.isNativePlatform()) {
+    try {
+      await PhotoLibrary.share({ fileName: filename, data: await blobToBase64(data) });
+      return;
+    } catch {
+      throw new SaveError("Die Datei konnte nicht geteilt werden.");
+    }
+  }
   const downloads = await getDownloads();
   if (downloads) {
     try {

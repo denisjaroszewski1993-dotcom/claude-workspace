@@ -1,5 +1,7 @@
-import { useState, type DragEvent } from "react";
-import { FileArchive, FolderOpen, ImagePlus, ShieldCheck, Sparkles } from "lucide-react";
+import { useEffect, useState, type DragEvent } from "react";
+import { FileArchive, FolderOpen, ImagePlus, Library, ShieldCheck, Sparkles } from "lucide-react";
+import { albumScope, rangeScope } from "../lib/libraryImport";
+import { hasNativeLibrary, PhotoLibrary, type AccessStatus, type NativeAlbum } from "../lib/nativeLibrary";
 import { detectDevice, type Device } from "../lib/platform";
 import { useStore } from "../state/store";
 import { useUi, type PickKind } from "../state/ui";
@@ -97,6 +99,121 @@ export function ImportOptions({ onPicked }: { onPicked?: () => void }) {
   );
 }
 
+type Range = "30-tage" | "12-monate" | "alles";
+
+const RANGES: { id: Range; label: string }[] = [
+  { id: "30-tage", label: "Letzte 30 Tage" },
+  { id: "12-monate", label: "Letzte 12 Monate" },
+  { id: "alles", label: "Alle Fotos" },
+];
+
+/** iPhone-App: die Mediathek direkt einlesen – ganz, nach Zeitraum oder als Album. */
+export function LibraryImport({ onDone }: { onDone?: () => void }) {
+  const { importFromLibrary } = useStore();
+  const [status, setStatus] = useState<AccessStatus | null>(null);
+  const [range, setRange] = useState<Range>("12-monate");
+  const [albums, setAlbums] = useState<NativeAlbum[] | null>(null);
+  const [busy, setBusy] = useState(false);
+
+  const refresh = () =>
+    PhotoLibrary.checkAccess()
+      .then((r) => setStatus(r.status))
+      .catch(() => setStatus("denied"));
+  useEffect(() => {
+    void refresh();
+  }, []);
+
+  const run = async (scope: Parameters<typeof importFromLibrary>[0]) => {
+    setBusy(true);
+    try {
+      const added = await importFromLibrary(scope);
+      if (added > 0) onDone?.();
+    } finally {
+      setBusy(false);
+      void refresh();
+    }
+  };
+
+  const showAlbums = async () => {
+    if (status === "notDetermined") setStatus((await PhotoLibrary.requestAccess()).status);
+    setAlbums((await PhotoLibrary.getAlbums()).albums);
+  };
+
+  if (status === "denied" || status === "restricted") {
+    return (
+      <section className="library">
+        <div className="library-head">
+          <Library size={24} aria-hidden="true" />
+          <div>
+            <strong>Kein Zugriff auf deine Fotos</strong>
+            <span>Erlaube Fotogeschichten in den Einstellungen den Zugriff auf „Alle Fotos“ – dann liest die App deine Mediathek direkt ein.</span>
+          </div>
+        </div>
+        <div className="btn-row">
+          <button type="button" className="btn btn-primary" onClick={() => void PhotoLibrary.openSettings()}>
+            Einstellungen öffnen
+          </button>
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section className="library" aria-labelledby="library-title">
+      <div className="library-head">
+        <Library size={24} aria-hidden="true" />
+        <div>
+          <strong id="library-title">Deine Mediathek</strong>
+          <span>Direkt vom iPhone, auch Fotos aus iCloud – ohne einzeln auszuwählen.</span>
+        </div>
+      </div>
+      <div className="chips" role="radiogroup" aria-label="Zeitraum">
+        {RANGES.map((r) => (
+          <button key={r.id} type="button" role="radio" className="chip plain" aria-checked={range === r.id} aria-pressed={range === r.id} onClick={() => setRange(r.id)}>
+            {r.label}
+          </button>
+        ))}
+      </div>
+      <div className="btn-row">
+        <button type="button" className="btn btn-primary" disabled={busy} onClick={() => void run(rangeScope(range))}>
+          {busy ? "Wird eingelesen …" : "Fotos einlesen"}
+        </button>
+        <button type="button" className="btn" disabled={busy} onClick={() => void showAlbums()}>
+          Ein Album wählen
+        </button>
+      </div>
+      {albums && (
+        <ul className="album-list" aria-label="Alben">
+          {albums.map((a) => (
+            <li key={a.id}>
+              <button type="button" disabled={busy} onClick={() => void run(albumScope(a.id, a.title))}>
+                <span>{a.title}</span>
+                <span className="mono muted num">{a.count}</span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+      {status === "limited" && (
+        <p className="library-note">
+          Du hast nur ausgewählte Fotos freigegeben.{" "}
+          <button type="button" className="btn-link" onClick={() => void PhotoLibrary.manageLimitedSelection().then(refresh)}>
+            Auswahl ändern
+          </button>{" "}
+          ·{" "}
+          <button type="button" className="btn-link" onClick={() => void PhotoLibrary.openSettings()}>
+            Alle Fotos erlauben
+          </button>
+        </p>
+      )}
+      <p className="library-note">
+        Fotos, die nur in iCloud liegen, lädt das iPhone beim Analysieren nach. Bei tausenden Fotos dauert der erste Durchlauf eine Weile; danach kommen neue Fotos beim Öffnen der App
+        automatisch dazu.
+      </p>
+    </section>
+  );
+}
+
 /** Schritt-für-Schritt: alle iCloud-Fotos auf einmal hineinholen. */
 export function ICloudGuide({ open }: { open?: boolean }) {
   const device = detectDevice();
@@ -172,8 +289,18 @@ export function ImportDialog({ onClose }: { onClose: () => void }) {
         ) : undefined
       }
     >
-      <ImportOptions onPicked={onClose} />
-      <ICloudGuide open />
+      {hasNativeLibrary() ? (
+        <>
+          <LibraryImport onDone={onClose} />
+          <h3 className="subhead">Weitere Wege</h3>
+          <ImportOptions onPicked={onClose} />
+        </>
+      ) : (
+        <>
+          <ImportOptions onPicked={onClose} />
+          <ICloudGuide open />
+        </>
+      )}
     </Dialog>
   );
 }
@@ -190,13 +317,14 @@ export function ImportHero() {
       <p className="lead">
         Die App erkennt Motive, Menschen, Orte und Tageszeiten, sortiert alles in Kategorien und Erlebnisse – und erzählt daraus Bildgeschichten.
       </p>
+      {hasNativeLibrary() && <LibraryImport />}
       <ImportOptions />
       <div className="btn-row">
         <button type="button" className="btn btn-quiet btn-small" onClick={() => void importDemo()}>
           <Sparkles size={16} /> Erst mal mit Beispielfotos ausprobieren
         </button>
       </div>
-      <ICloudGuide />
+      {!hasNativeLibrary() && <ICloudGuide />}
       <div className="steps">
         <div className="step">
           <span className="mono">1 · Erkennen</span>
@@ -227,6 +355,11 @@ export function ImportCompact() {
     <div className={`dropzone dropzone-compact${active ? " active" : ""}`} {...handlers}>
       <p>Weitere Fotos, Ordner oder ZIP-Dateien hierher ziehen – bereits bekannte Fotos werden erkannt und übersprungen.</p>
       <div className="btn-row">
+        {hasNativeLibrary() && (
+          <button type="button" className="btn btn-small btn-primary" onClick={() => ui.openImport()}>
+            <Library size={16} /> Mediathek
+          </button>
+        )}
         <button type="button" className="btn btn-small" onClick={() => ui.pickFiles("fotos")}>
           <ImagePlus size={16} /> Fotos
         </button>
@@ -236,9 +369,11 @@ export function ImportCompact() {
         <button type="button" className="btn btn-small" onClick={() => ui.pickFiles("zip")}>
           <FileArchive size={16} /> ZIP
         </button>
-        <button type="button" className="btn btn-small btn-quiet" onClick={() => ui.openImport()}>
-          iCloud: so geht’s
-        </button>
+        {!hasNativeLibrary() && (
+          <button type="button" className="btn btn-small btn-quiet" onClick={() => ui.openImport()}>
+            iCloud: so geht’s
+          </button>
+        )}
       </div>
     </div>
   );

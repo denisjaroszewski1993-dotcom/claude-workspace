@@ -59,13 +59,19 @@ async function fetchModel({ name, base, query }) {
   const manifest = JSON.parse(json.toString("utf8"));
   let bytes = json.length;
   for (const group of manifest.weightsManifest) {
+    const local = [];
     for (const path of group.paths) {
       const shard = await download(`${base}/${path}${query}`);
-      await writeFile(join(dir, path), shard);
+      // Einheitlich ".bin": Webserver (und die iPhone-App) liefern Dateien
+      // ohne Endung sonst womöglich als Webseite aus.
+      const fileName = /\.[a-z0-9]+$/i.test(path) ? path : `${path}.bin`;
+      await writeFile(join(dir, fileName), shard);
+      local.push(fileName);
       bytes += shard.length;
     }
+    group.paths = local;
   }
-  await writeFile(modelJsonPath, json);
+  await writeFile(modelJsonPath, JSON.stringify(manifest));
   console.log(`✓ ${name}: ${(bytes / 1024 / 1024).toFixed(1)} MB`);
   return true;
 }

@@ -7,6 +7,7 @@ import { formatDate, formatTime } from "../lib/events";
 import { labelName } from "../lib/imagenet";
 import { useStore } from "../state/store";
 import { CategoryChip, Dialog } from "./common";
+import { usePhotoUrl } from "./usePhotoUrl";
 
 function sizeLabel(bytes: number) {
   return bytes > 1024 * 1024 ? `${(bytes / 1024 / 1024).toFixed(1).replace(".", ",")} MB` : `${Math.round(bytes / 1024)} KB`;
@@ -15,18 +16,11 @@ function sizeLabel(bytes: number) {
 export function PhotoDetail({ id, list, onNavigate, onClose }: { id: string; list: string[]; onNavigate: (id: string) => void; onClose: () => void }) {
   const { state, setManualCategories, setExcluded } = useStore();
   const photo = state.photos[id];
-  const [fullUrl, setFullUrl] = useState<string>();
+  const fullUrl = usePhotoUrl(photo);
   const [editing, setEditing] = useState(false);
   const index = list.indexOf(id);
   const prev = index > 0 ? list[index - 1] : undefined;
   const next = index >= 0 && index < list.length - 1 ? list[index + 1] : undefined;
-
-  useEffect(() => {
-    if (!photo?.file) return;
-    const url = URL.createObjectURL(photo.file);
-    setFullUrl(url);
-    return () => URL.revokeObjectURL(url);
-  }, [photo?.file]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -106,8 +100,8 @@ export function PhotoDetail({ id, list, onNavigate, onClose }: { id: string; lis
             )}
             <dt>Datei</dt>
             <dd className="num">
-              {photo.width && photo.height ? `${photo.width} × ${photo.height} · ` : ""}
-              {sizeLabel(photo.size)}
+              {photo.width && photo.height ? `${photo.width} × ${photo.height}` : ""}
+              {photo.size > 0 ? ` · ${sizeLabel(photo.size)}` : photo.native ? " · aus der Mediathek" : ""}
             </dd>
             {photo.quality && (
               <>

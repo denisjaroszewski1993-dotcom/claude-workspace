@@ -5,6 +5,7 @@ import { COCO_DE } from "./categorize";
 import { formatDate, formatTime } from "./events";
 import { labelName } from "./imagenet";
 import { getSample } from "./platform";
+import { thumbBlob } from "./photoData";
 import { colorName, joinGerman } from "./storyText";
 
 // Lässt Claude die Geschichte schreiben. Zwei Wege:
@@ -130,9 +131,9 @@ export interface WriteOptions {
 
 export async function writeWithClaude({ story, photos, access, signal, onText }: WriteOptions): Promise<Story> {
   const prompt = buildPrompt(story, photos, story.style, story.length);
-  const thumbs = story.chapters
-    .map((c) => photos[c.photoIds[0]]?.thumb)
-    .filter((b): b is Blob => !!b);
+  const thumbs = (await Promise.all(story.chapters.map((c) => (photos[c.photoIds[0]] ? thumbBlob(photos[c.photoIds[0]]) : undefined)))).filter(
+    (b): b is Blob => !!b,
+  );
 
   if (access.kind === "claude.ai") {
     const sample = (await getSample())!;

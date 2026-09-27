@@ -292,6 +292,16 @@ p {
   gap: 28px;
 }
 
+/* Kein Inhalt darf die Spalte breiter als den Bildschirm drücken. */
+.main > * {
+  min-width: 0;
+}
+
+.dropzone .btn {
+  white-space: normal;
+  padding-block: 8px;
+}
+
 @media (max-width: 720px) {
   :root {
     --bottom-nav: calc(62px + env(safe-area-inset-bottom, 0px));
@@ -835,6 +845,77 @@ p {
   .import-option em {
     padding-top: 4px;
   }
+}
+
+.library {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid var(--accent);
+  background: var(--accent-soft);
+}
+
+.library-head {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.library-head svg {
+  color: var(--accent);
+  flex: none;
+  margin-top: 2px;
+}
+
+.library-head div {
+  display: grid;
+  gap: 2px;
+}
+
+.library-head strong {
+  font-size: 17px;
+}
+
+.library-head span,
+.library-note {
+  color: var(--ink-2);
+  font-size: 14px;
+}
+
+.album-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 4px;
+  max-height: 260px;
+  overflow: auto;
+  border-radius: 8px;
+  background: var(--mount);
+  border: 1px solid var(--line);
+}
+
+.album-list button {
+  appearance: none;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 0;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  color: var(--ink);
+}
+
+.album-list li + li button {
+  border-top: 1px solid var(--line-soft);
+}
+
+.album-list button:hover {
+  background: var(--accent-soft);
 }
 
 .guide {
@@ -2091,6 +2172,35 @@ p {
 }
 
 .empty h3 {
+  color: var(--ink);
+}
+
+.show-more {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  padding: 18px 0 6px;
+}
+
+.thumb-more {
+  display: grid;
+  place-items: center;
+  width: 112px;
+  flex: none;
+  min-height: 100px;
+  border: 1px dashed var(--line);
+  border-radius: 8px;
+  background: none;
+  color: var(--ink-2);
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.thumb-more:hover {
+  border-color: var(--ink-2);
   color: var(--ink);
 }
 

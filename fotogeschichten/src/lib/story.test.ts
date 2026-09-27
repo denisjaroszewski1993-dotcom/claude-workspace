@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { StoryStyle } from "../types";
 import { findDuplicateGroups, groupsFromMarks } from "./duplicates";
+import { createRandom } from "./random";
 import { buildStory, selectPhotos } from "./story";
 import { colorName, joinGerman } from "./storyText";
 import { at, fakePhoto } from "./testing";
@@ -91,6 +92,24 @@ describe("findDuplicateGroups", () => {
     expect(groups).toEqual([{ keepId: a.id, photoIds: [a.id, b.id] }]);
     // Aus den gespeicherten Markierungen ergibt sich dieselbe Gruppe
     expect(groupsFromMarks([a, { ...b, duplicateOf: a.id }, c])).toEqual(groups);
+  });
+});
+
+describe("Duplikatsuche bei großen Mediatheken", () => {
+  it("bleibt bei 20.000 Fotos schnell und findet Kopien und Serien", () => {
+    const rnd = createRandom(1).next;
+    const hex = () => Array.from({ length: 16 }, () => Math.floor(rnd() * 16).toString(16)).join("");
+    const photos = Array.from({ length: 20_000 }, (_, i) => fakePhoto({ hash: hex(), takenAt: at(2020, 1, 1) + i * 3_600_000 }));
+    // eine Kopie (1 Bit anders, anderes Datum) und eine Serie (8 Bit anders, 5 Sekunden später)
+    const copy = fakePhoto({ hash: photos[100].hash!.slice(0, 15) + ((parseInt(photos[100].hash!.slice(15), 16) ^ 1).toString(16)), takenAt: at(2024, 1, 1) });
+    const burst = fakePhoto({ hash: (BigInt("0x" + photos[500].hash!) ^ 0xffn).toString(16).padStart(16, "0"), takenAt: photos[500].takenAt! + 5000 });
+    const started = performance.now();
+    const groups = findDuplicateGroups([...photos, copy, burst]);
+    const ms = performance.now() - started;
+    const ids = groups.map((g) => [...g.photoIds].sort());
+    expect(ids).toContainEqual([photos[100].id, copy.id].sort());
+    expect(ids).toContainEqual([photos[500].id, burst.id].sort());
+    expect(ms).toBeLessThan(5000);
   });
 });
 

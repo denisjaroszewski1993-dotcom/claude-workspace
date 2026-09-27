@@ -1,4 +1,4 @@
-import { del, get, set, createStore, clear } from "idb-keyval";
+import { del, get, getMany, set, createStore, clear } from "idb-keyval";
 import type { ColorInfo, QualityInfo, Recognition } from "../types";
 import { canvasToBlob, decodeImage, drawScaled, pixelsOf, releaseImage, sizeOf } from "./image";
 import { readMetadata, type PhotoMetadata } from "./metadata";
@@ -9,7 +9,8 @@ export interface AnalysisResult {
   version: number;
   width: number;
   height: number;
-  thumb: Blob;
+  /** fehlt bei Mediathek-Fotos – deren Vorschaubild legt das Swift-Modul ab */
+  thumb?: Blob;
   colors: ColorInfo;
   quality: QualityInfo;
   hash: string;
@@ -61,6 +62,18 @@ export async function readCache(id: string): Promise<AnalysisResult | undefined>
   }
 }
 
+/** Viele auf einmal – einzeln abgefragt dauert der Start bei großen Mediatheken Minuten. */
+export async function readCacheMany(ids: string[]): Promise<(AnalysisResult | undefined)[]> {
+  const s = cacheStore();
+  if (!s || !ids.length) return ids.map(() => undefined);
+  try {
+    const values = (await getMany(ids, s)) as (AnalysisResult | undefined)[];
+    return values.map((v) => (v?.version === VERSION ? v : undefined));
+  } catch {
+    return ids.map(() => undefined);
+  }
+}
+
 async function writeCache(id: string, value: AnalysisResult) {
   const s = cacheStore();
   if (!s) return;
@@ -87,20 +100,29 @@ export async function forgetCache(id?: string) {
 export interface AnalyzeOptions {
   id: string;
   recognition: boolean;
+  /** eigenes Vorschaubild erzeugen (bei Mediathek-Fotos nicht nötig) */
+  makeThumb?: boolean;
+  /** schon nachgeschlagener Eintrag im Zwischenspeicher (`null`: sicher keiner) */
+  cached?: AnalysisResult | null;
 }
 
-/** Analysiert ein Foto vollständig oder holt das Ergebnis aus dem Zwischenspeicher. */
-export async function analyzeFile(file: File, options: AnalyzeOptions): Promise<AnalysisResult> {
-  const cached = await readCache(options.id);
+/**
+ * Analysiert ein Foto vollständig oder holt das Ergebnis aus dem
+ * Zwischenspeicher. `load` wird nur aufgerufen, wenn wirklich gerechnet werden
+ * muss – so kostet ein bereits bekanntes Mediathek-Foto keinen Ladevorgang.
+ */
+export async function analyzeFile(load: () => Promise<Blob>, options: AnalyzeOptions): Promise<AnalysisResult> {
+  const cached = options.cached === undefined ? await readCache(options.id) : (options.cached ?? undefined);
   if (cached && (!options.recognition || cached.recognition)) return cached;
 
-  const [meta, src] = await Promise.all([readMetadata(file), decodeImage(file)]);
+  const blob = await load();
+  const noMetadata: PhotoMetadata = { hasCameraExif: false };
+  const [meta, src] = await Promise.all([blob instanceof File ? readMetadata(blob) : Promise.resolve(noMetadata), decodeImage(blob)]);
   try {
     const { width, height } = sizeOf(src);
     // Eine mittelgroße Fassung für Schärfe und Erkennung, daraus alles Weitere.
     const work = drawScaled(src, width, height, 512);
     const small = drawScaled(work, work.width, work.height, 128);
-    const thumbCanvas = drawScaled(src, width, height, 480);
 
     const colors = analyzeColors(pixelsOf(small));
     const workPixels = pixelsOf(work);
@@ -108,7 +130,7 @@ export async function analyzeFile(file: File, options: AnalyzeOptions): Promise<
     const quality = assessQuality(sharpness, colors);
     const smallGray = toGray(pixelsOf(small));
     const hash = dHash(smallGray, small.width, small.height);
-    const thumb = await canvasToBlob(thumbCanvas, "image/jpeg", 0.8);
+    const thumb = options.makeThumb === false ? undefined : await canvasToBlob(drawScaled(src, width, height, 480), "image/jpeg", 0.8);
 
     let recognition: Recognition | undefined = cached?.recognition;
     if (options.recognition && !recognition) {

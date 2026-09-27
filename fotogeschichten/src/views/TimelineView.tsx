@@ -1,27 +1,57 @@
+import { useMemo, useState } from "react";
 import { BookOpen } from "lucide-react";
 import type { Photo } from "../types";
 import { monthName } from "../lib/events";
 import { useStore } from "../state/store";
 import { useUi } from "../state/ui";
-import { Empty, PhotoMount } from "../components/common";
+import { Empty, PhotoMount, ShowMore, usePaged } from "../components/common";
 
 const SHORT = ["J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"];
+/** So viele Vorschaubilder pro Monat, bevor „+ n weitere“ kommt. */
+const PER_MONTH = 30;
+
+/** Eine Reihe Vorschaubilder; lange Reihen erst auf Wunsch ganz. */
+function ThumbRow({ photos }: { photos: Photo[] }) {
+  const ui = useUi();
+  const [all, setAll] = useState(false);
+  const ids = photos.map((p) => p.id);
+  const shown = all ? photos : photos.slice(0, PER_MONTH);
+  return (
+    <div className="thumb-row">
+      {shown.map((p) => (
+        <PhotoMount key={p.id} photo={p} caption={false} onOpen={() => ui.openPhoto(p.id, ids)} />
+      ))}
+      {shown.length < photos.length && (
+        <button type="button" className="thumb-more" onClick={() => setAll(true)}>
+          + {photos.length - shown.length} weitere
+        </button>
+      )}
+    </div>
+  );
+}
 
 export function TimelineView() {
   const { photos } = useStore();
   const ui = useUi();
-  const dated = photos.filter((p) => p.status === "fertig" && p.takenAt !== undefined).sort((a, b) => b.takenAt! - a.takenAt!);
-  const undated = photos.filter((p) => p.status === "fertig" && p.takenAt === undefined);
+  const { years, undated, empty } = useMemo(() => {
+    const dated = photos.filter((p) => p.status === "fertig" && p.takenAt !== undefined).sort((a, b) => b.takenAt! - a.takenAt!);
+    const undated = photos.filter((p) => p.status === "fertig" && p.takenAt === undefined);
+    const years = new Map<number, Map<number, Photo[]>>();
+    for (const p of dated) {
+      const d = new Date(p.takenAt!);
+      let months = years.get(d.getFullYear());
+      if (!months) years.set(d.getFullYear(), (months = new Map()));
+      const list = months.get(d.getMonth());
+      if (list) list.push(p);
+      else months.set(d.getMonth(), [p]);
+    }
+    // Innerhalb eines Monats chronologisch, damit man von vorn nach hinten blättert.
+    for (const months of years.values()) for (const list of months.values()) list.reverse();
+    return { years: [...years.entries()], undated, empty: !dated.length && !undated.length };
+  }, [photos]);
+  const paged = usePaged(years, 2);
 
-  const years = new Map<number, Map<number, Photo[]>>();
-  for (const p of dated) {
-    const d = new Date(p.takenAt!);
-    const months = years.get(d.getFullYear()) ?? new Map<number, Photo[]>();
-    months.set(d.getMonth(), [...(months.get(d.getMonth()) ?? []), p]);
-    years.set(d.getFullYear(), months);
-  }
-
-  if (!dated.length && !undated.length) {
+  if (empty) {
     return (
       <Empty title="Noch keine Zeitleiste">
         <p>Sobald Fotos mit Aufnahmedatum analysiert sind, erscheinen sie hier nach Jahr und Monat.</p>
@@ -31,7 +61,7 @@ export function TimelineView() {
 
   return (
     <section className="section" aria-label="Zeitleiste">
-      {[...years.entries()].map(([year, months]) => {
+      {paged.shown.map(([year, months]) => {
         const all = [...months.values()].flat();
         const max = Math.max(...[...months.values()].map((m) => m.length));
         return (
@@ -66,27 +96,20 @@ export function TimelineView() {
                   <strong>{monthName(month)}</strong>
                   <span className="mono muted num">{list.length} Fotos</span>
                 </div>
-                <div className="thumb-row">
-                  {[...list].reverse().map((p) => (
-                    <PhotoMount key={p.id} photo={p} caption={false} onOpen={() => ui.openPhoto(p.id, [...list].reverse().map((x) => x.id))} />
-                  ))}
-                </div>
+                <ThumbRow photos={list} />
               </div>
             ))}
           </div>
         );
       })}
-      {undated.length > 0 && (
+      <ShowMore paged={paged} noun="Jahre" />
+      {undated.length > 0 && paged.rest === 0 && (
         <div className="year">
           <div className="year-head">
             <h2>Ohne Datum</h2>
             <span className="muted num">{undated.length} Fotos</span>
           </div>
-          <div className="thumb-row">
-            {undated.map((p) => (
-              <PhotoMount key={p.id} photo={p} caption={false} onOpen={() => ui.openPhoto(p.id, undated.map((x) => x.id))} />
-            ))}
-          </div>
+          <ThumbRow photos={undated} />
         </div>
       )}
     </section>

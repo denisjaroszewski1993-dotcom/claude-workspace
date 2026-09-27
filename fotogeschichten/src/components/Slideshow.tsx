@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Pause, Play, X } from "lucide-react";
+import { photoDisplayUrl } from "../lib/photoData";
 import { useStore } from "../state/store";
 
 type Slide =
@@ -30,28 +31,42 @@ export function Slideshow({ storyId, onClose }: { storyId: string; onClose: () =
 
   const go = useCallback((delta: number) => setIndex((i) => Math.max(0, Math.min(slides.length - 1, i + delta))), [slides.length]);
 
-  // Nur die aktuelle und die benachbarten Aufnahmen in voller Größe bereithalten
+  // Nur die aktuelle und die benachbarten Aufnahmen in großer Fassung bereithalten
+  const loaded = useRef(new Map<string, { url: string; release(): void }>());
+  const pending = useRef(new Set<string>());
   useEffect(() => {
     const wanted = new Set<string>();
     for (const i of [index - 1, index, index + 1]) {
       const s = slides[i];
       if (s?.kind === "photo") wanted.add(s.photoId);
     }
-    setUrls((prev) => {
-      const next: Record<string, string> = {};
-      for (const [id, url] of Object.entries(prev)) {
-        if (wanted.has(id)) next[id] = url;
-        else URL.revokeObjectURL(url);
+    for (const [id, entry] of loaded.current) {
+      if (!wanted.has(id)) {
+        entry.release();
+        loaded.current.delete(id);
       }
-      for (const id of wanted) if (!next[id] && state.photos[id]) next[id] = URL.createObjectURL(state.photos[id].file);
-      return next;
-    });
+    }
+    for (const id of wanted) {
+      const photo = state.photos[id];
+      if (!photo || loaded.current.has(id) || pending.current.has(id)) continue;
+      pending.current.add(id);
+      photoDisplayUrl(photo, 2048)
+        .then((entry) => {
+          loaded.current.set(id, entry);
+          setUrls((prev) => ({ ...prev, [id]: entry.url }));
+        })
+        .catch(() => undefined)
+        .finally(() => pending.current.delete(id));
+    }
   }, [index, slides, state.photos]);
 
-  useEffect(() => () => setUrls((prev) => {
-    Object.values(prev).forEach((u) => URL.revokeObjectURL(u));
-    return {};
-  }), []);
+  useEffect(
+    () => () => {
+      for (const entry of loaded.current.values()) entry.release();
+      loaded.current.clear();
+    },
+    [],
+  );
 
   useEffect(() => {
     if (!playing) return;

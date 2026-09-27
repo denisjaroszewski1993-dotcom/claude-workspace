@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useReducer, useRef, type ReactNode } from "react";
 import type { CategoryId, Photo, PhotoEvent, Settings, Story } from "../types";
-import { analyzeFile, fileId, forgetCache } from "../lib/analyze";
+import { analyzeFile, fileId, forgetCache, readCacheMany, type AnalysisResult } from "../lib/analyze";
 import { categorize } from "../lib/categorize";
 import { loadDemo } from "../lib/demo";
 import { duplicateMap } from "../lib/duplicates";
@@ -8,6 +8,8 @@ import { buildEvents } from "../lib/events";
 import { reverseGeocode } from "../lib/geo";
 import { loadModels } from "../lib/recognition";
 import { imagesFromZip, isZipFile } from "../lib/zip";
+import { assetToPhoto, catchUpScope, forgetScopes, rememberScope, savedScopes, type LibraryScope } from "../lib/libraryImport";
+import { hasNativeLibrary, NATIVE_THUMB_SIZE, PhotoLibrary, type AccessStatus } from "../lib/nativeLibrary";
 
 export type ModelState = "aus" | "laedt" | "bereit" | "fehler";
 
@@ -136,6 +138,7 @@ interface StoreValue {
   events: PhotoEvent[];
   importFiles(files: File[]): Promise<number>;
   importDemo(): Promise<void>;
+  importFromLibrary(scope: LibraryScope, options?: { quiet?: boolean; remember?: boolean }): Promise<number>;
   setManualCategories(id: string, categories: CategoryId[] | undefined): void;
   setExcluded(ids: string[], excluded: boolean): void;
   updateSettings(patch: Partial<Settings>): void;
@@ -166,6 +169,10 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const workers = useRef(0);
   const batch = useRef({ total: 0, done: 0 });
   const noticeId = useRef(0);
+  // Analyse-Ergebnisse werden gesammelt und gebündelt übernommen: pro Foto neu zu
+  // zeichnen (und Erlebnisse neu zu berechnen) wäre bei 20.000 Fotos viel zu langsam.
+  const pending = useRef<Record<string, Partial<Photo>>>({});
+  const flushTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   useEffect(() => writeJson(KEYS.settings, state.settings), [state.settings]);
   useEffect(() => writeJson(KEYS.stories, state.stories), [state.stories]);
@@ -203,6 +210,30 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     }
   }, [notify]);
 
+  const flush = useCallback(() => {
+    clearTimeout(flushTimer.current);
+    flushTimer.current = undefined;
+    const patches = pending.current;
+    pending.current = {};
+    if (Object.keys(patches).length) {
+      dispatch({ type: "patchPhotos", patches });
+      const photos = { ...stateRef.current.photos };
+      for (const [id, patch] of Object.entries(patches)) if (photos[id]) photos[id] = { ...photos[id], ...patch };
+      stateRef.current = { ...stateRef.current, photos };
+    }
+    dispatch({ type: "progress", ...batch.current });
+  }, []);
+
+  const stage = useCallback(
+    (id: string, patch: Partial<Photo>) => {
+      pending.current[id] = { ...pending.current[id], ...patch };
+      if (flushTimer.current !== undefined) return;
+      // Je größer die Sammlung, desto seltener: 250 ms bei wenigen, bis 2 s bei sehr vielen Fotos.
+      flushTimer.current = setTimeout(flush, Math.min(2000, 250 + stateRef.current.order.length / 10));
+    },
+    [flush],
+  );
+
   const markDuplicates = useCallback(() => {
     const photos = Object.values(stateRef.current.photos);
     const dups = duplicateMap(photos);
@@ -228,23 +259,39 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const work = useCallback(async () => {
-    const useRecognition = await ensureModels();
-    while (queue.current.length) {
-      const id = queue.current.shift()!;
+  /** Ein Foto analysieren (oder aus dem Zwischenspeicher übernehmen). */
+  const analyzeOne = useCallback(
+    async (id: string, cached: AnalysisResult | null, useRecognition: boolean) => {
       const photo = stateRef.current.photos[id];
-      if (!photo) continue;
+      // Inzwischen entfernt (z. B. Beispielfotos)? Dann nicht wieder einfügen.
+      if (!photo) return;
       try {
-        const result = await analyzeFile(photo.file, { id, recognition: useRecognition });
+        // Mediathek-Fotos: das Swift-Modul legt ein Vorschaubild ab, das zugleich
+        // analysiert und angezeigt wird. Dateien werden direkt gelesen.
+        const native = photo.native;
+        let thumbUrl = photo.thumbUrl;
+        const nativeThumb = async () => (await PhotoLibrary.getImage({ id: native!.id, maxSize: NATIVE_THUMB_SIZE })).webPath;
+        const load = native
+          ? async () => {
+              thumbUrl = await nativeThumb();
+              return (await fetch(thumbUrl)).blob();
+            }
+          : async () => {
+              if (!photo.file) throw new Error("keine Bilddaten");
+              return photo.file;
+            };
+        const result = await analyzeFile(load, { id, recognition: useRecognition, makeThumb: !native, cached });
+        if (native && !thumbUrl) thumbUrl = await nativeThumb();
+        if (!thumbUrl && result.thumb) thumbUrl = URL.createObjectURL(result.thumb);
         const takenAt = photo.takenAt ?? result.meta.takenAt;
         const patch: Partial<Photo> = {
           status: "fertig",
-          width: result.width,
-          height: result.height,
-          thumbUrl: photo.thumbUrl ?? URL.createObjectURL(result.thumb),
+          width: photo.width ?? result.width,
+          height: photo.height ?? result.height,
+          thumbUrl,
           thumb: result.thumb,
           takenAt,
-          dateSource: photo.source === "beispiel" ? "exif" : result.meta.dateSource,
+          dateSource: photo.dateSource ?? (photo.source === "beispiel" ? "exif" : result.meta.dateSource),
           gps: photo.gps ?? result.meta.gps,
           camera: result.meta.camera,
           hasCameraExif: result.meta.hasCameraExif,
@@ -261,31 +308,35 @@ export function StoreProvider({ children }: { children: ReactNode }) {
             height: result.height,
             hasCameraExif: result.meta.hasCameraExif,
             takenAt,
+            screenshot: native?.screenshot,
           }),
         };
-        dispatch({ type: "patchPhotos", patches: { [id]: patch } });
-        // Wurde das Foto inzwischen entfernt (z. B. Beispielfotos), nicht wieder einfügen.
-        if (stateRef.current.photos[id]) {
-          stateRef.current = { ...stateRef.current, photos: { ...stateRef.current.photos, [id]: { ...photo, ...patch } } };
-        }
+        stage(id, patch);
       } catch (err) {
         const heic = /heic|heif/i.test(photo.type) || /\.hei[cf]$/i.test(photo.name);
-        dispatch({
-          type: "patchPhotos",
-          patches: {
-            [id]: {
-              status: "fehler",
-              error: heic
-                ? "HEIC-Fotos kann dieser Browser nicht öffnen. In Safari klappt es – oder am iPhone unter Einstellungen › Kamera › Formate „Maximale Kompatibilität“ wählen."
-                : `Dieses Bild ließ sich nicht öffnen (${(err as Error).message || "unbekannter Fehler"}).`,
-            },
-          },
+        stage(id, {
+          status: "fehler",
+          error: photo.native
+            ? `Dieses Foto ließ sich nicht laden: ${(err as Error).message || "unbekannter Fehler"}`
+            : heic
+              ? "HEIC-Fotos kann dieser Browser nicht öffnen. In Safari klappt es – oder am iPhone unter Einstellungen › Kamera › Formate „Maximale Kompatibilität“ wählen."
+              : `Dieses Bild ließ sich nicht öffnen (${(err as Error).message || "unbekannter Fehler"}).`,
         });
       }
       batch.current.done++;
-      dispatch({ type: "progress", ...batch.current });
+    },
+    [stage],
+  );
+
+  const work = useCallback(async () => {
+    const useRecognition = await ensureModels();
+    while (queue.current.length) {
+      // Häppchenweise: Bekannte Fotos kommen gesammelt aus dem Zwischenspeicher.
+      const ids = queue.current.splice(0, 100);
+      const known = await readCacheMany(ids);
+      for (const [index, id] of ids.entries()) await analyzeOne(id, known[index] ?? null, useRecognition);
     }
-  }, [ensureModels]);
+  }, [ensureModels, analyzeOne]);
 
   const pumpRef = useRef<() => Promise<void>>(async () => undefined);
   const pump = useCallback(async () => {
@@ -305,12 +356,13 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     // Kamen Fotos genau beim Ende des Durchlaufs dazu, weitermachen.
     if (queue.current.length) return pumpRef.current();
     if (workers.current === 0) {
+      flush();
       markDuplicates();
       batch.current = { total: 0, done: 0 };
       dispatch({ type: "progress", total: 0, done: 0 });
       void lookUpPlaces();
     }
-  }, [work, markDuplicates, lookUpPlaces]);
+  }, [work, flush, markDuplicates, lookUpPlaces]);
   pumpRef.current = pump;
 
   const enqueue = useCallback(
@@ -345,7 +397,11 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     const demo = Object.values(stateRef.current.photos).filter((p) => p.source === "beispiel");
     if (!demo.length) return;
     const ids = new Set(demo.map((p) => p.id));
-    for (const p of demo) if (p.thumbUrl) URL.revokeObjectURL(p.thumbUrl);
+    for (const p of demo) {
+      const url = pending.current[p.id]?.thumbUrl ?? p.thumbUrl;
+      if (url) URL.revokeObjectURL(url);
+      delete pending.current[p.id];
+    }
     queue.current = queue.current.filter((id) => !ids.has(id));
     dispatch({ type: "removePhotos", ids: [...ids] });
     stateRef.current = {
@@ -410,6 +466,74 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     },
     [addPhotos, notify, removeDemo],
   );
+
+  /** Liest die iPhone-Mediathek (ganz, einen Zeitraum oder ein Album) seitenweise ein. */
+  const importFromLibrary = useCallback(
+    async (scope: LibraryScope, options: { quiet?: boolean; remember?: boolean } = {}): Promise<number> => {
+      let status: AccessStatus = (await PhotoLibrary.checkAccess()).status;
+      if (status === "notDetermined") status = (await PhotoLibrary.requestAccess()).status;
+      if (status !== "authorized" && status !== "limited") {
+        if (!options.quiet) notify("Ohne Zugriff auf die Fotos geht es nicht. Du kannst ihn in den Einstellungen des iPhones erlauben.", "fehler");
+        return 0;
+      }
+      removeDemo();
+      if (options.remember !== false) rememberScope(scope);
+      let offset = 0;
+      let total = Infinity;
+      let added = 0;
+      while (offset < total) {
+        const page = await PhotoLibrary.getAssets({ offset, limit: 500, albumId: scope.albumId, since: scope.since });
+        total = page.total;
+        if (!page.assets.length) break;
+        offset += page.assets.length;
+        const photos = page.assets.map(assetToPhoto);
+        try {
+          // Schon vorhandene Vorschaubilder gleich anzeigen, ohne auf die Analyse zu warten.
+          const { images } = await PhotoLibrary.existingImages({ ids: page.assets.map((a) => a.id), maxSize: NATIVE_THUMB_SIZE });
+          for (const p of photos) if (images[p.native!.id]) p.thumbUrl = images[p.native!.id];
+        } catch {
+          // nicht schlimm – dann kommen sie mit der Analyse
+        }
+        added += addPhotos(photos);
+      }
+      if (!options.quiet || added > 0) {
+        notify(
+          total === 0 || total === Infinity
+            ? `In ${scope.label} wurden keine Fotos gefunden.`
+            : added > 0
+              ? `${added} ${added === 1 ? "Foto" : "Fotos"} aus ${scope.label} werden analysiert${status === "limited" ? " (nur die freigegebenen)" : ""}.`
+              : `Alle Fotos aus ${scope.label} sind schon da.`,
+        );
+      }
+      return added;
+    },
+    [addPhotos, notify, removeDemo],
+  );
+
+  // In der iPhone-App: beim Start und bei jeder Rückkehr in die App auf den neuesten Stand bringen.
+  useEffect(() => {
+    if (!hasNativeLibrary()) return;
+    let running = false;
+    const sync = async (initial: boolean) => {
+      const scopes = savedScopes();
+      if (!scopes.length || running) return;
+      const { status } = await PhotoLibrary.checkAccess().catch(() => ({ status: "denied" as AccessStatus }));
+      if (status !== "authorized" && status !== "limited") return;
+      running = true;
+      try {
+        const photos = Object.values(stateRef.current.photos);
+        for (const scope of scopes) await importFromLibrary(initial ? scope : catchUpScope(scope, photos), { quiet: true, remember: false });
+      } finally {
+        running = false;
+      }
+    };
+    void sync(true);
+    const onVisible = () => {
+      if (document.visibilityState === "visible") void sync(false);
+    };
+    document.addEventListener("visibilitychange", onVisible);
+    return () => document.removeEventListener("visibilitychange", onVisible);
+  }, [importFromLibrary]);
 
   const importDemo = useCallback(async () => {
     try {
@@ -487,7 +611,10 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const clearPhotos = useCallback(() => {
     for (const p of Object.values(stateRef.current.photos)) if (p.thumbUrl) URL.revokeObjectURL(p.thumbUrl);
+    for (const patch of Object.values(pending.current)) if (patch.thumbUrl) URL.revokeObjectURL(patch.thumbUrl);
+    pending.current = {};
     queue.current = [];
+    batch.current = { total: 0, done: 0 };
     dispatch({ type: "clear" });
     stateRef.current = { ...stateRef.current, photos: {}, order: [] };
   }, []);
@@ -495,6 +622,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const forgetEverything = useCallback(async () => {
     clearPhotos();
     await forgetCache();
+    forgetScopes();
+    if (hasNativeLibrary()) await PhotoLibrary.clearCache().catch(() => undefined);
     for (const key of Object.values(KEYS)) {
       try {
         localStorage.removeItem(key);
@@ -520,6 +649,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     events,
     importFiles,
     importDemo,
+    importFromLibrary,
     setManualCategories,
     setExcluded,
     updateSettings,

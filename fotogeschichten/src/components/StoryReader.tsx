@@ -10,6 +10,7 @@ import { buildStory } from "../lib/story";
 import { useStore } from "../state/store";
 import { useUi } from "../state/ui";
 import { STYLE_LABEL } from "../views/StoriesView";
+import { usePhotoUrl } from "./usePhotoUrl";
 
 function slug(s: string) {
   return (
@@ -246,13 +247,6 @@ export function StoryReader({
 /** Titelbild in voller Auflösung, solange die Geschichte offen ist. */
 function CoverImage({ photoId }: { photoId: string }) {
   const { state } = useStore();
-  const photo = state.photos[photoId];
-  const [url, setUrl] = useState(photo?.thumbUrl);
-  useEffect(() => {
-    if (!photo?.file) return;
-    const full = URL.createObjectURL(photo.file);
-    setUrl(full);
-    return () => URL.revokeObjectURL(full);
-  }, [photo?.file]);
+  const url = usePhotoUrl(state.photos[photoId]);
   return <img className="cover" src={url} alt="" />;
 }
