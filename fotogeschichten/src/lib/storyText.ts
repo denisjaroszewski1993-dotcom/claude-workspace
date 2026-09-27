@@ -498,44 +498,60 @@ export function chapterText(style: StoryStyle, length: StoryLength, facts: Chapt
   return lines.join(" ");
 }
 
+const STANDALONE_TITLE: Partial<Record<CategoryId, string>> = {
+  nacht: "Wenn die Lichter angehen",
+  feier: "Ein Abend voller Leben",
+  menschen: "Gemeinsame Zeit",
+  essen: "Genussmomente",
+  tiere: "Tierisch schöne Tage",
+  himmel: "Unter goldenem Himmel",
+  sport: "In Bewegung",
+};
+
+const WHERE: Partial<Record<CategoryId, string>> = {
+  strand: "am Meer",
+  berge: "in den Bergen",
+  natur: "im Grünen",
+  stadt: "in der Stadt",
+  winter: "im Schnee",
+  zuhause: "zu Hause",
+  unterwegs: "unterwegs",
+};
+
 export function storyTitle(opts: {
   style: StoryStyle;
   kind: "erlebnis" | "kategorie" | "jahr" | "auswahl";
-  mainCategory: CategoryId;
+  /** dominante Kategorien, wichtigste zuerst */
+  categories: CategoryId[];
   start?: number;
   days: number;
   label: string;
   rng: Random;
 }): string {
-  const { style, kind, mainCategory, start, days, label, rng } = opts;
+  const { style, kind, categories, start, days, label, rng } = opts;
+  const mainCategory = categories[0] ?? "sonstiges";
   if (kind === "jahr") {
     return style === "maerchen" ? `Das Märchen vom Jahr ${label}` : style === "tagebuch" ? `Mein Jahr ${label}` : `Unser Jahr ${label}`;
   }
   if (kind === "kategorie") {
     return style === "maerchen" ? `Geschichten aus dem Reich: ${label}` : style === "tagebuch" ? `Mein Album: ${label}` : label;
   }
-  const place: Partial<Record<CategoryId, string>> = {
-    strand: "am Meer",
-    berge: "in den Bergen",
-    natur: "im Grünen",
-    stadt: "in der Stadt",
-    winter: "im Schnee",
-    zuhause: "zu Hause",
-    unterwegs: "unterwegs",
-  };
-  const where = place[mainCategory];
+  // Ein Ort aus den wichtigsten Motiven macht den besten Titel ("Ein Wochenende in der Stadt").
+  const whereCat = categories.slice(0, 3).find((c) => WHERE[c]);
+  const where = whereCat ? WHERE[whereCat] : undefined;
   const season = start !== undefined ? SEASON_WORD[seasonOf(start)] : undefined;
   const span = days >= 2 ? (days <= 3 && start !== undefined && [5, 6].includes(new Date(start).getDay()) ? "Ein Wochenende" : `${capitalize(numberWord(days))} Tage`) : "Ein Tag";
 
   if (style === "maerchen") {
     return where ? `Es war einmal ${where}` : "Es war einmal";
   }
+  const standalone = STANDALONE_TITLE[mainCategory];
   if (style === "tagebuch") {
-    return where ? `Tagebuch: ${span} ${where}` : `Tagebuch: ${label}`;
+    return where ? `Tagebuch: ${span} ${where}` : `Tagebuch: ${standalone ?? label}`;
   }
   if (where && season && rng.chance(0.5)) return `${season} ${where}`;
   if (where) return `${span} ${where}`;
-  return label;
+  return standalone ?? label;
 }
 
 export function closingLine(style: StoryStyle, rng: Random): string {

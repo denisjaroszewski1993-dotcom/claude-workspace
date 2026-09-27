@@ -53,3 +53,13 @@ export function duplicateMap(photos: Photo[]): Map<string, string> {
   }
   return map;
 }
+
+/** Gruppen aus den gespeicherten Markierungen (duplicateOf) – ohne erneuten Vergleich, O(n). */
+export function groupsFromMarks(photos: Photo[]): DuplicateGroup[] {
+  const groups = new Map<string, string[]>();
+  for (const p of photos) {
+    if (!p.duplicateOf) continue;
+    groups.set(p.duplicateOf, [...(groups.get(p.duplicateOf) ?? [p.duplicateOf]), p.id]);
+  }
+  return [...groups.entries()].map(([keepId, photoIds]) => ({ keepId, photoIds }));
+}

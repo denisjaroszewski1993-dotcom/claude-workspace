@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { StoryStyle } from "../types";
-import { findDuplicateGroups } from "./duplicates";
+import { findDuplicateGroups, groupsFromMarks } from "./duplicates";
 import { buildStory, selectPhotos } from "./story";
 import { colorName, joinGerman } from "./storyText";
 import { at, fakePhoto } from "./testing";
@@ -89,6 +89,8 @@ describe("findDuplicateGroups", () => {
     const c = fakePhoto({ hash: "0000ffff0000ffff" });
     const groups = findDuplicateGroups([a, b, c]);
     expect(groups).toEqual([{ keepId: a.id, photoIds: [a.id, b.id] }]);
+    // Aus den gespeicherten Markierungen ergibt sich dieselbe Gruppe
+    expect(groupsFromMarks([a, { ...b, duplicateOf: a.id }, c])).toEqual(groups);
   });
 });
 

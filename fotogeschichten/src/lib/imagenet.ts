@@ -359,6 +359,8 @@ const SINGLE: Record<number, LabelMeaning> = {
 
   // Licht
   818: m("Scheinwerfer", { nacht: 0.4, feier: 0.4 }),
+  781: m("Leuchttafel", { stadt: 0.4, nacht: 0.2 }),
+  800: m("Spielautomat", { feier: 0.3 }),
 };
 
 export function meaningOf(index: number): LabelMeaning | undefined {

@@ -10,7 +10,8 @@
     "build": "node scripts/fetch-models.mjs --if-missing && tsc --noEmit -p . && vite build",
     "preview": "vite preview",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit -p ."
+    "typecheck": "tsc --noEmit -p .",
+    "build:artifact": "npm run build && node scripts/build-artifact.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.128.0",

@@ -14,6 +14,8 @@ export interface CategorizeInput {
   width?: number;
   height?: number;
   hasCameraExif?: boolean;
+  /** Aufnahmezeitpunkt – Tageszeit ist ein starkes Signal für Nacht und Abende */
+  takenAt?: number;
 }
 
 const COCO_GROUPS: Record<string, { cat: CategoryId; de: string }> = {
@@ -115,12 +117,15 @@ export function categorize(input: CategorizeInput): CategoryScore[] {
     scores.set(id, entry);
   };
 
-  // 1. Motiv-Erkennung (MobileNet)
+  // 1. Motiv-Erkennung (MobileNet). MobileNet verteilt seine Sicherheit oft auf
+  // mehrere ähnliche Klassen (Küste, Sandbank, Landzunge); deshalb werden mittlere
+  // Wahrscheinlichkeiten angehoben (p^0,6) und Treffer derselben Kategorie addiert.
   for (const label of input.recognition?.labels ?? []) {
     const meaning = meaningOf(label.index);
     if (!meaning || label.prob < 0.04) continue;
+    const strength = Math.pow(label.prob, 0.6);
     for (const [cat, weight] of Object.entries(meaning.cats) as [CategoryId, number][]) {
-      add(cat, label.prob * weight * 1.1, `Motiv: ${meaning.de} (${pct(label.prob)})`);
+      add(cat, strength * weight * 1.1, `Motiv: ${meaning.de} (${pct(label.prob)})`);
     }
   }
 
@@ -136,41 +141,61 @@ export function categorize(input: CategorizeInput): CategoryScore[] {
       add("menschen", points, `${kind} erkannt`);
     }
   }
+  let streetPoints = 0;
   for (const obj of objects) {
     const group = COCO_GROUPS[obj.name];
     if (!group) continue;
+    // Kleine Fahrzeuge sind meist Teil einer Straßenszene – das spricht für "Stadt".
+    if (group.cat === "unterwegs" && obj.area < 0.05) {
+      if (obj.area >= 0.003) streetPoints += 0.15;
+      continue;
+    }
     const minArea = group.cat === "zuhause" || group.cat === "stadt" ? 0.02 : 0.015;
     if (obj.area < minArea) continue;
     const weight = group.cat === "zuhause" ? 0.35 : group.cat === "dokumente" ? 0.4 : 0.55;
     add(group.cat, obj.score * weight + Math.min(0.3, obj.area), `${group.de} im Bild`);
   }
+  if (streetPoints > 0) add("stadt", Math.min(0.35, streetPoints), "Fahrzeuge auf der Straße");
   const drinks = objects.filter((o) => ["wine glass", "cup", "bottle"].includes(o.name)).length;
   if (objects.some((o) => o.name === "cake") && people.length >= 1) add("feier", 0.5, "Kuchen und Menschen");
   if (drinks >= 2 && people.length >= 2) add("feier", 0.45, "Gläser und mehrere Menschen");
   if (people.length >= 5) add("feier", 0.25, "Viele Menschen");
 
-  // 3. Farben und Licht
+  // 3. Tageszeit
+  const time = input.takenAt !== undefined ? new Date(input.takenAt) : undefined;
+  const hour = time?.getHours();
+  const clock = time ? `${String(time.getHours()).padStart(2, "0")}:${String(time.getMinutes()).padStart(2, "0")} Uhr` : "";
   const c = input.colors;
+  if (hour !== undefined) {
+    const lateNight = hour >= 21 || hour < 5;
+    if (lateNight && (!c || c.brightness < 0.45)) add("nacht", 0.35, `Aufgenommen um ${clock}`);
+    else if (hour >= 19 && c && c.brightness < 0.25) add("nacht", 0.2, `Aufgenommen um ${clock}`);
+    if ((hour >= 18 || hour < 3) && people.length >= 3) add("feier", 0.3, `Abends mit mehreren Menschen (${clock})`);
+  }
+
+  // 4. Farben und Licht
   if (c) {
-    if (c.sky.warm > 0.3 && c.brightness < 0.72 && c.saturation > 0.28) {
+    // Abendrot: warmer Himmel, der heller ist als der Rest – und kein gedeckter Tisch im Vordergrund.
+    const tableScene = objects.some((o) => ["dining table", "bowl", "cup", "couch", "bed", "tv"].includes(o.name) && o.area > 0.15);
+    const plausibleHour = hour === undefined || (hour >= 4 && hour < 10) || (hour >= 16 && hour < 23);
+    if (c.sky.warm > 0.3 && c.sky.brightness >= c.brightness - 0.02 && c.saturation > 0.25 && c.brightness < 0.75 && plausibleHour && !tableScene) {
       add("himmel", Math.min(0.85, 0.3 + c.sky.warm), "Warmes Licht am Himmel");
-    } else if (c.shares.warm > 0.4 && c.brightness < 0.6 && c.warmth > 0.25) {
-      add("himmel", 0.3, "Abendlicht");
     }
-    if (c.brightness < 0.2 && c.shares.dark > 0.5) {
-      const withLights = c.contrast > 0.12 || c.shares.warm > 0.04;
-      add("nacht", withLights ? 0.6 : 0.4, withLights ? "Dunkel mit Lichtern" : "Sehr dunkles Bild");
+    if (c.brightness < 0.25 && (c.shares.dark > 0.15 || c.contrast > 0.08)) {
+      const withLights = c.contrast > 0.08 || c.shares.warm > 0.04;
+      add("nacht", withLights ? 0.45 : 0.35, withLights ? "Dunkel mit Lichtern" : "Sehr dunkles Bild");
     }
-    if (c.shares.white > 0.3 && c.saturation < 0.2 && c.brightness > 0.62 && c.warmth < 0.15) {
-      add("winter", Math.min(0.6, c.shares.white), "Viel Weiß in kühlen Tönen");
+    // Schnee liegt unten: viel Weiß in der unteren Bildhälfte, nicht nur heller Himmel.
+    if (c.ground.white > 0.3 && c.saturation < 0.25 && c.warmth < 0.15) {
+      add("winter", Math.min(0.6, c.ground.white), "Viel Weiß am Boden");
     }
     if (c.shares.green > 0.3) add("natur", Math.min(0.45, c.shares.green * 0.7), "Viel Grün");
     if (c.sky.blue > 0.35 && c.shares.blue > 0.3 && c.shares.green < 0.2) {
-      add("strand", 0.15, "Viel Blau");
+      add("strand", c.sky.blue > 0.5 ? 0.18 : 0.12, "Viel Blau");
     }
   }
 
-  // 4. Screenshots
+  // 5. Screenshots
   if (looksLikeScreenshot(input)) add("dokumente", 0.9, "Sieht aus wie ein Bildschirmfoto");
 
   const result = [...scores.entries()]
@@ -178,7 +203,7 @@ export function categorize(input: CategorizeInput): CategoryScore[] {
     .sort((a, b) => b.score - a.score);
 
   const top = result[0];
-  if (!top || top.score < 0.25) {
+  if (!top || top.score < 0.22) {
     return [{ id: "sonstiges", score: 1, reasons: ["Kein eindeutiges Motiv erkannt"] }];
   }
   // Nebenkategorien nur, wenn sie deutlich genug sind.

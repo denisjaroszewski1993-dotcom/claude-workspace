@@ -52,6 +52,11 @@ export interface ColorInfo {
     blue: number;
     brightness: number;
   };
+  /** Werte nur für die untere Bildhälfte (Boden) */
+  ground: {
+    white: number;
+    brightness: number;
+  };
 }
 
 export interface QualityInfo {
@@ -102,6 +107,8 @@ export interface Photo {
   error?: string;
 
   thumbUrl?: string;
+  /** kleines JPEG (480 px) – für Anzeige und als Vorschaubild für Claude */
+  thumb?: Blob;
   width?: number;
   height?: number;
 
@@ -110,6 +117,8 @@ export interface Photo {
   gps?: GeoPoint;
   /** Ortsname aus Metadaten, Beispieldaten oder OpenStreetMap */
   place?: string;
+  /** Bildnachweis (bei Beispielfotos) */
+  credit?: string;
   camera?: string;
   hasCameraExif?: boolean;
 
@@ -173,6 +182,8 @@ export interface Story {
   chapters: StoryChapter[];
   closing: string;
   coverPhotoId?: string;
+  /** alle Fotos, aus denen ausgewählt wurde (für "Neu würfeln") */
+  photoPool: string[];
   seed: number;
   author: StoryAuthor;
   createdAt: number;

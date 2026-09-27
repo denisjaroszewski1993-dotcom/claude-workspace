@@ -45,6 +45,30 @@ describe("categorize", () => {
     expect(categorize({ ...base, colors })[0].id).toBe("himmel");
   });
 
+  it("nutzt die Tageszeit für Nachtaufnahmen", () => {
+    const colors = analyzeColors(imageFrom(40, 40, (x) => (x % 7 === 0 ? [250, 220, 150] : [50, 45, 60])));
+    const late = new Date(2025, 9, 3, 23, 41).getTime();
+    const result = categorize({ ...base, colors, takenAt: late });
+    expect(result[0].id).toBe("nacht");
+    expect(result[0].reasons).toContain("Aufgenommen um 23:41 Uhr");
+  });
+
+  it("hält hellen Himmel nicht für Schnee, weißen Boden schon", () => {
+    const brightSky = analyzeColors(imageFrom(40, 40, (_x, y) => (y < 16 ? [245, 245, 245] : [120, 110, 90])));
+    expect(categorize({ ...base, colors: brightSky }).map((r) => r.id)).not.toContain("winter");
+    const snow = analyzeColors(imageFrom(40, 40, (_x, y) => (y < 16 ? [150, 170, 200] : [240, 243, 248])));
+    expect(categorize({ ...base, colors: snow })[0].id).toBe("winter");
+  });
+
+  it("wertet kleine Autos als Straßenszene statt als Fahrzeugfoto", () => {
+    const result = categorize({
+      ...base,
+      recognition: { labels: [], objects: [{ name: "car", score: 0.8, area: 0.02 }, { name: "car", score: 0.7, area: 0.01 }] },
+    });
+    expect(result[0].id).toBe("stadt");
+    expect(categorize({ ...base, recognition: { labels: [], objects: [{ name: "car", score: 0.9, area: 0.4 }] } })[0].id).toBe("unterwegs");
+  });
+
   it("fällt auf 'Sonstiges' zurück, wenn nichts eindeutig ist", () => {
     expect(categorize(base)).toEqual([{ id: "sonstiges", score: 1, reasons: ["Kein eindeutiges Motiv erkannt"] }]);
   });

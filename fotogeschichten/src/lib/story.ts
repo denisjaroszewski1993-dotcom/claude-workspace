@@ -93,8 +93,11 @@ export function limitGroups(groups: Group[], max: number): Group[] {
   return result;
 }
 
+/** Personen, die das Bild prägen – winzige Passanten im Hintergrund zählen nicht. */
 function peopleIn(p: Photo): number {
-  return (p.recognition?.objects ?? []).filter((o) => o.name === "person" && o.score >= 0.5 && o.area > 0.01).length;
+  const people = (p.recognition?.objects ?? []).filter((o) => o.name === "person" && o.score >= 0.5);
+  const prominent = people.filter((o) => o.area > 0.04).length;
+  return prominent > 0 || people.length >= 3 ? people.filter((o) => o.area > 0.005).length : 0;
 }
 
 /** Wählt gute und möglichst unterschiedliche Bilder, Reihenfolge bleibt chronologisch. */
@@ -223,7 +226,7 @@ export function buildStory({ photos, source, style, length, seed }: BuildStoryOp
   const start = dated.length ? Math.min(...dated) : undefined;
   const end = dated.length ? Math.max(...dated) : undefined;
   const days = new Set(dated.map(dayKey)).size;
-  const main = dominantCategories(candidates)[0] ?? "sonstiges";
+  const dominant = dominantCategories(candidates);
   const allChosen = chapters.flatMap((c) => c.photoIds);
   const cover = candidates
     .filter((p) => allChosen.includes(p.id))
@@ -231,7 +234,7 @@ export function buildStory({ photos, source, style, length, seed }: BuildStoryOp
 
   return {
     id: `story-${Date.now().toString(36)}-${seed.toString(36)}`,
-    title: storyTitle({ style, kind: source.kind, mainCategory: main, start, days, label: source.label, rng }),
+    title: storyTitle({ style, kind: source.kind, categories: dominant, start, days, label: source.label, rng }),
     subtitle: subtitleFor(start, end, candidates),
     style,
     length,
@@ -239,6 +242,7 @@ export function buildStory({ photos, source, style, length, seed }: BuildStoryOp
     chapters,
     closing: closingLine(style, rng),
     coverPhotoId: cover?.id,
+    photoPool: candidates.map((p) => p.id),
     seed,
     author: "eingebaut",
     createdAt: Date.now(),

@@ -59,6 +59,10 @@ export function analyzeColors(img: PixelData): ColorInfo {
   let skyWarm = 0;
   let skyBlue = 0;
   let skyL = 0;
+  const groundStart = Math.floor(height / 2);
+  let groundN = 0;
+  let groundWhite = 0;
+  let groundL = 0;
 
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
@@ -92,6 +96,11 @@ export function analyzeColors(img: PixelData): ColorInfo {
         if (isWarm) skyWarm++;
         if (isBlue) skyBlue++;
       }
+      if (y >= groundStart) {
+        groundN++;
+        groundL += l;
+        if (isWhite) groundWhite++;
+      }
 
       // 4 Bit pro Kanal -> 4096 Farbfächer
       const key = ((r >> 4) << 8) | ((g >> 4) << 4) | (b >> 4);
@@ -116,6 +125,7 @@ export function analyzeColors(img: PixelData): ColorInfo {
       palette: [],
       shares: { green: 0, blue: 0, white: 0, warm: 0, dark: 0, bright: 0 },
       sky: { warm: 0, blue: 0, brightness: 0 },
+      ground: { white: 0, brightness: 0 },
     };
   }
 
@@ -139,6 +149,10 @@ export function analyzeColors(img: PixelData): ColorInfo {
       warm: skyN ? skyWarm / skyN : 0,
       blue: skyN ? skyBlue / skyN : 0,
       brightness: skyN ? skyL / skyN : 0,
+    },
+    ground: {
+      white: groundN ? groundWhite / groundN : 0,
+      brightness: groundN ? groundL / groundN : 0,
     },
   };
 }
