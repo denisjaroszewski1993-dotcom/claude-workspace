@@ -29,6 +29,26 @@ Jede Zuordnung ist **erklärbar**: Im Foto-Detail steht, warum ein Bild in einer
   - Lesen, direkt im Text bearbeiten, als **Diashow** abspielen oder als **eigenständige HTML-Datei** speichern und verschicken
 - **Sortiert speichern**: Kopien als ZIP oder direkt in einen Ordner (Chrome/Edge am Computer), wahlweise nach Kategorie, Datum oder Erlebnis, mit Übersichtstabelle (`Übersicht.csv`)
 
+## Fotos hineinholen – auch alle auf einmal aus iCloud
+
+„Fotos hinzufügen“ bietet drei Wege; die Tipps im Dialog passen sich dem Gerät an.
+
+| Weg | Wofür | Alle auf einmal |
+|---|---|---|
+| **Fotomediathek** | einzelne oder viele Fotos, auch aus iCloud | iPhone: Finger auf ein Foto legen und über die Reihen ziehen · Mac: im Auswahlfenster „Fotos“ wählen, ⌘A · Windows: Strg+A |
+| **Ganzer Ordner** | alle Bilder eines Ordners samt Unterordnern | ein Klick – auf dem iPhone ab iOS 18.4 aus der Dateien-App |
+| **ZIP-Datei** | z. B. ein Download von iCloud.com | wird automatisch ausgepackt |
+
+**Alle iCloud-Fotos am iPhone:** Fotos-App › Album öffnen › *Auswählen* › *Alle auswählen* › Teilen › *In Dateien sichern* › Ordner wählen. Danach in der App *Ganzer Ordner* und genau diesen Ordner öffnen.
+
+**Alle iCloud-Fotos am Computer:** [icloud.com/photos](https://www.icloud.com/photos/) › ⌘A bzw. Strg+A › Download. iCloud packt bis zu 1.000 Fotos in eine ZIP-Datei; die in der App unter *ZIP-Datei* auswählen oder hineinziehen. Mit *iCloud für Windows* einfach den Ordner „iCloud Fotos“ als *Ganzer Ordner* wählen.
+
+Warum kein direkter Zugriff? Apple bietet Webseiten keine Schnittstelle zur iCloud-Mediathek – das dürfen nur Apps (PhotoKit). Eine echte App-Fassung wäre dafür der nächste Schritt.
+
+Der ZIP-Leser (`src/lib/zip.ts`) liest nur das Inhaltsverzeichnis und reicht unkomprimiert gespeicherte Fotos als Ausschnitt der ZIP-Datei weiter, ohne sie in den Arbeitsspeicher zu kopieren. ZIP64-Archive über 4 GB werden unterstützt. Bereits bekannte Fotos erkennt die App am Inhalt und überspringt sie – egal, auf welchem Weg sie kommen.
+
+In der Fotoansicht markiert **Auswählen › Alle … auswählen** alle sichtbaren Fotos (auch gefiltert nach Kategorie), um sie z. B. auszusortieren oder daraus eine Geschichte zu machen.
+
 ## Starten
 
 Voraussetzung: [Node.js](https://nodejs.org) ab Version 20.
@@ -77,6 +97,7 @@ src/
     storyText.ts      eingebauter Erzähler (Satzbausteine, drei Stile)
     claudeWriter.ts   Claude als Erzähler (claude.ai oder API-Schlüssel)
     exporter.ts       ZIP, Ordner-Export, Geschichte als HTML
+    zip.ts            Fotos aus ZIP-Dateien lesen (auch ZIP64, ohne Kopie)
     analyze.ts        Analyse-Pipeline + Zwischenspeicher (IndexedDB)
   state/store.tsx     App-Zustand, Warteschlange für die Analyse
   views/, components/ Oberfläche (React)
@@ -89,7 +110,8 @@ public/demo/          Beispielfotos (Unsplash-Lizenz) mit erfundenen Daten
 ## Grenzen und Ideen für später
 
 - **HEIC** (iPhone-Standardformat) können nur Safari und neuere Browser öffnen. Beim Auswählen über die Fotomediathek wandelt iOS meist automatisch in JPEG um. Alternativ: iPhone › Einstellungen › Kamera › Formate › „Maximale Kompatibilität“.
-- Beim Hochladen aus der iOS-Fotomediathek kann iOS die **GPS-Daten entfernen**; dann gibt es keine Orte und keine Reiseerkennung.
+- Beim Hochladen aus der iOS-Fotomediathek kann iOS die **GPS-Daten entfernen**; dann gibt es keine Orte und keine Reiseerkennung. Über *In Dateien sichern* + *Ganzer Ordner* bleiben sie erhalten, solange im Teilen-Menü unter *Optionen* der Standort eingeschaltet ist.
+- Während der Analyse hält die App den Bildschirm wach (wo der Browser es erlaubt), damit das iPhone große Mengen nicht mittendrin pausiert.
 - MobileNet kennt keine Gesichter oder Namen – Personen werden gezählt, nicht erkannt. Das ist Absicht.
 - Sehr große Sammlungen (mehrere tausend Fotos) funktionieren, die erste Analyse dauert aber je nach Gerät einige Minuten; danach hilft der Zwischenspeicher.
 - Mögliche nächste Schritte: Gesichter gruppieren (nur lokal), eine Karte der Aufnahmeorte, PWA zum Installieren auf dem Home-Bildschirm, mehrsprachige Oberfläche.

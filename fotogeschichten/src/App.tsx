@@ -5,7 +5,7 @@ import { effectiveCategories } from "./lib/categories";
 import { groupsFromMarks } from "./lib/duplicates";
 import { useStore } from "./state/store";
 import { UiContext, type Tab, type UiActions } from "./state/ui";
-import { ImportHero } from "./components/ImportZone";
+import { ImportDialog, ImportHero } from "./components/ImportZone";
 import { PhotoDetail } from "./components/PhotoDetail";
 import { StoryCreator } from "./components/StoryCreator";
 import { StoryReader } from "./components/StoryReader";
@@ -55,8 +55,10 @@ export function App() {
   const [slideshow, setSlideshow] = useState<string | null>(null);
   const [exportOpen, setExportOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [importOpen, setImportOpen] = useState(false);
   const filesInput = useRef<HTMLInputElement>(null);
   const folderInput = useRef<HTMLInputElement>(null);
+  const zipInput = useRef<HTMLInputElement>(null);
 
   // Beim allerersten Besuch zeigt die App gleich die Beispielfotos.
   useEffect(() => {
@@ -89,7 +91,8 @@ export function App() {
       openStory: (id) => setReader({ id, claude: false }),
       openExport: () => setExportOpen(true),
       openSettings: () => setSettingsOpen(true),
-      pickFiles: (folder) => (folder ? folderInput : filesInput).current?.click(),
+      openImport: () => setImportOpen(true),
+      pickFiles: (kind) => ({ fotos: filesInput, ordner: folderInput, zip: zipInput })[kind].current?.click(),
     }),
     [goTab],
   );
@@ -102,10 +105,31 @@ export function App() {
     if (added > 0 && tab !== "uebersicht") goTab("uebersicht");
   };
 
+  // Während der Analyse den Bildschirm wach halten – sonst pausiert das iPhone die Seite.
+  const analysing = state.progress.total > 0 && state.progress.done < state.progress.total;
+  useEffect(() => {
+    if (!analysing) return;
+    type Lock = { release(): Promise<void> };
+    const wakeLock = (navigator as Navigator & { wakeLock?: { request(type: "screen"): Promise<Lock> } }).wakeLock;
+    let lock: Lock | undefined;
+    let released = false;
+    wakeLock
+      ?.request("screen")
+      .then((l) => {
+        if (released) void l.release().catch(() => undefined);
+        else lock = l;
+      })
+      .catch(() => undefined);
+    return () => {
+      released = true;
+      void lock?.release().catch(() => undefined);
+    };
+  }, [analysing]);
+
   const hasPhotos = photos.length > 0;
   const demo = photos.some((p) => p.source === "beispiel");
   const { total, done } = state.progress;
-  const busy = total > 0 && done < total;
+  const busy = analysing;
   const counts: Partial<Record<Tab, number>> = {
     fotos: photos.length,
     erlebnisse: events.filter((e) => e.kind !== "ohne-datum").length,
@@ -145,7 +169,7 @@ export function App() {
                 <PackageOpen size={18} /> <span className="hide-narrow">Speichern</span>
               </button>
             )}
-            <button type="button" className="btn btn-small btn-primary" onClick={() => ui.pickFiles()}>
+            <button type="button" className="btn btn-small btn-primary" onClick={() => setImportOpen(true)}>
               <ImagePlus size={18} /> <span className="hide-narrow">Fotos hinzufügen</span>
             </button>
             <button type="button" className="btn btn-small btn-quiet btn-icon" onClick={() => setSettingsOpen(true)} aria-label="Einstellungen">
@@ -177,7 +201,7 @@ export function App() {
           {demo && (
             <div className="banner">
               <p>Du siehst Beispielfotos mit erfundenen Daten. Sobald du eigene Fotos hinzufügst, verschwinden sie.</p>
-              <button type="button" className="btn btn-small" onClick={() => ui.pickFiles()}>
+              <button type="button" className="btn btn-small" onClick={() => setImportOpen(true)}>
                 Eigene Fotos wählen
               </button>
               <button type="button" className="btn btn-small btn-icon" onClick={removeDemo} aria-label="Beispielfotos entfernen">
@@ -215,6 +239,7 @@ export function App() {
         )}
 
         <input ref={filesInput} type="file" accept="image/*,.heic,.heif" multiple hidden onChange={(e) => void onFiles(e.target.files, e.target)} />
+        <input ref={zipInput} type="file" accept=".zip,application/zip,application/x-zip-compressed" multiple hidden onChange={(e) => void onFiles(e.target.files, e.target)} />
         <input
           ref={folderInput}
           type="file"
@@ -245,6 +270,7 @@ export function App() {
         {slideshow && <Slideshow storyId={slideshow} onClose={() => setSlideshow(null)} />}
         {exportOpen && <ExportDialog onClose={() => setExportOpen(false)} />}
         {settingsOpen && <SettingsDialog onClose={() => setSettingsOpen(false)} />}
+        {importOpen && <ImportDialog onClose={() => setImportOpen(false)} />}
         <Toast />
       </div>
     </UiContext.Provider>

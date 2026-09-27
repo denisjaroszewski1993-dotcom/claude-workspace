@@ -93,3 +93,17 @@ export async function saveFile(filename: string, data: Blob): Promise<void> {
   a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 60_000);
 }
+
+export type Device = "ios" | "mac" | "windows" | "android" | "anderes";
+
+/** Grobe Geräteerkennung – nur für passende Bedienhinweise, nicht für Funktionen. */
+export function detectDevice(): Device {
+  if (typeof navigator === "undefined") return "anderes";
+  const ua = navigator.userAgent;
+  // iPadOS meldet sich als Mac, hat aber einen Touchscreen
+  if (/iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1)) return "ios";
+  if (/Android/.test(ua)) return "android";
+  if (/Macintosh/.test(ua)) return "mac";
+  if (/Windows/.test(ua)) return "windows";
+  return "anderes";
+}

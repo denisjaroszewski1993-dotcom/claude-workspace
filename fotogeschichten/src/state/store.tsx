@@ -7,6 +7,7 @@ import { duplicateMap } from "../lib/duplicates";
 import { buildEvents } from "../lib/events";
 import { reverseGeocode } from "../lib/geo";
 import { loadModels } from "../lib/recognition";
+import { imagesFromZip, isZipFile } from "../lib/zip";
 
 export type ModelState = "aus" | "laedt" | "bereit" | "fehler";
 
@@ -355,7 +356,25 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const importFiles = useCallback(
-    async (files: File[]) => {
+    async (input: File[]) => {
+      // ZIP-Archive (z. B. von iCloud.com) werden ausgepackt, alles andere bleibt, wie es ist.
+      const files: File[] = [];
+      let skippedInZips = 0;
+      for (const file of input) {
+        if (!isZipFile(file)) {
+          files.push(file);
+          continue;
+        }
+        notify(`„${file.name}“ wird geöffnet …`);
+        try {
+          const { files: fromZip, skipped } = await imagesFromZip(file);
+          files.push(...fromZip);
+          skippedInZips += skipped;
+          if (!fromZip.length) notify(`In „${file.name}“ waren keine Fotos.`, "fehler");
+        } catch (err) {
+          notify(`„${file.name}“ ließ sich nicht öffnen: ${(err as Error).message}`, "fehler");
+        }
+      }
       const images = files.filter(isImageFile);
       // Sobald eigene Fotos kommen, räumen die Beispielfotos das Feld.
       if (images.length) removeDemo();
@@ -378,7 +397,15 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         });
       }
       const added = addPhotos(photos);
-      if (images.length < files.length) notify(`${files.length - images.length} Dateien waren keine Bilder und wurden übersprungen.`);
+      const skipped = files.length - images.length + skippedInZips;
+      const known = photos.length - added + (images.length - photos.length);
+      const parts =
+        added > 0
+          ? [`${added} ${added === 1 ? "Foto wird" : "Fotos werden"} analysiert`, ...(known > 0 ? [`${known} ${known === 1 ? "war" : "waren"} schon da`] : [])]
+          : [known === 1 ? "Dieses Foto ist schon da" : `Alle ${known} Fotos sind schon da`];
+      if (skipped > 0) parts.push(`${skipped} ${skipped === 1 ? "Datei war kein Bild" : "Dateien waren keine Bilder"}`);
+      if (images.length) notify(`${parts.join(", ")}.`);
+      else if (!input.some(isZipFile)) notify("Unter den gewählten Dateien war kein Foto.", "fehler");
       return added;
     },
     [addPhotos, notify, removeDemo],

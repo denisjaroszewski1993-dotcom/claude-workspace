@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { ArrowDownUp, BookOpen, CheckSquare, EyeOff, X } from "lucide-react";
+import { ArrowDownUp, BookOpen, CheckCheck, CheckSquare, EyeOff, X } from "lucide-react";
 import type { CategoryId } from "../types";
 import { CATEGORIES, effectiveCategories } from "../lib/categories";
 import { useStore } from "../state/store";
@@ -89,9 +89,15 @@ export function PhotosView({ filter, onFilter }: { filter: CategoryId | "alle"; 
       {selecting && (
         <div className="selection-bar" role="region" aria-label="Auswahl">
           <p>{selected.size} ausgewählt</p>
-          <button type="button" className="btn btn-small" onClick={() => setSelected(new Set(ids))}>
-            Alle
-          </button>
+          {selected.size < ids.length ? (
+            <button type="button" className="btn btn-small" onClick={() => setSelected(new Set(ids))}>
+              <CheckCheck size={16} /> Alle {ids.length} auswählen
+            </button>
+          ) : (
+            <button type="button" className="btn btn-small" onClick={() => setSelected(new Set())}>
+              Auswahl aufheben
+            </button>
+          )}
           <button
             type="button"
             className="btn btn-small"

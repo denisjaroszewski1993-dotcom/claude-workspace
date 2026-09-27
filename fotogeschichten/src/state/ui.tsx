@@ -1,6 +1,8 @@
 import { createContext, useContext } from "react";
 import type { CategoryId, StorySource } from "../types";
 
+export type PickKind = "fotos" | "ordner" | "zip";
+
 export type Tab = "uebersicht" | "fotos" | "zeitleiste" | "erlebnisse" | "geschichten" | "aufraeumen";
 
 export interface UiActions {
@@ -11,7 +13,8 @@ export interface UiActions {
   openStory(id: string): void;
   openExport(): void;
   openSettings(): void;
-  pickFiles(folder?: boolean): void;
+  openImport(): void;
+  pickFiles(kind: PickKind): void;
 }
 
 export const UiContext = createContext<UiActions | null>(null);
