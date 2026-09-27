@@ -23,6 +23,40 @@ function modelUrl(path: string): string {
   return new URL(`${import.meta.env.BASE_URL}models/${path}`, document.baseURI).href;
 }
 
+function base64ToBytes(text: string): Uint8Array {
+  const binary = atob(text.trim());
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  return bytes;
+}
+
+/**
+ * Lädt ein Modell (model.json + Gewichte). Gewichte dürfen als Binärdatei
+ * oder – wo ein Server nur Textdateien ausliefert, z. B. claude.ai-Artifacts –
+ * als Base64-Text (Endung .b64.txt) vorliegen.
+ */
+function modelLoader(tf: TF, url: string): import("@tensorflow/tfjs-core").io.IOHandler {
+  const base = url.slice(0, url.lastIndexOf("/") + 1);
+  return {
+    load: async () => {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`Modell nicht gefunden (${res.status})`);
+      const json = (await res.json()) as import("@tensorflow/tfjs-core").io.ModelJSON;
+      return tf.io.getModelArtifactsForJSON(json, async (manifest) => {
+        const parts: ArrayBuffer[] = [];
+        for (const group of manifest) {
+          for (const path of group.paths) {
+            const shard = await fetch(base + path);
+            if (!shard.ok) throw new Error(`Modelldatei fehlt: ${path}`);
+            parts.push(path.endsWith(".b64.txt") ? (base64ToBytes(await shard.text()).buffer as ArrayBuffer) : await shard.arrayBuffer());
+          }
+        }
+        return [tf.io.getWeightSpecs(manifest), tf.io.concatenateArrayBuffers(parts)];
+      });
+    },
+  };
+}
+
 export function loadModels(): Promise<Models> {
   loading ??= (async () => {
     const tf = await import("@tensorflow/tfjs-core");
@@ -42,8 +76,9 @@ export function loadModels(): Promise<Models> {
       import("@tensorflow-models/mobilenet/dist/imagenet_classes"),
     ]);
     const [mobilenet, detector] = await Promise.all([
-      mobilenetLib.load({ version: 2, alpha: 1.0, modelUrl: modelUrl("mobilenet/model.json"), inputRange: [0, 1] }),
-      cocoLib.load({ base: "lite_mobilenet_v2", modelUrl: modelUrl("coco-ssd/model.json") }),
+      mobilenetLib.load({ version: 2, alpha: 1.0, modelUrl: modelLoader(tf, modelUrl("mobilenet/model.json")), inputRange: [0, 1] }),
+      // coco-ssd reicht modelUrl unverändert an loadGraphModel weiter, das auch einen Lader annimmt.
+      cocoLib.load({ base: "lite_mobilenet_v2", modelUrl: modelLoader(tf, modelUrl("coco-ssd/model.json")) as unknown as string }),
     ]);
     return { tf, mobilenet, detector, classes: classesLib.IMAGENET_CLASSES, backend };
   })();

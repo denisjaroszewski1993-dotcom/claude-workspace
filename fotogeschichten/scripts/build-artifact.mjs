@@ -5,7 +5,7 @@
 // Alle übrigen Dateien aus dist/ (JS, CSS, Modelle, Beispielfotos) werden
 // daneben veröffentlicht; die App lädt sie über relative Pfade.
 
-import { readFile, readdir, stat, writeFile } from "node:fs/promises";
+import { readFile, readdir, rm, stat, writeFile } from "node:fs/promises";
 import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -25,6 +25,27 @@ const page = [
   "",
 ].join("\n");
 await writeFile(join(dist, "artifact.html"), page);
+
+// claude.ai liefert nur bekannte Dateitypen aus; Binärdateien ohne passende
+// Endung (die Modellgewichte) werden deshalb als Base64-Text abgelegt und die
+// Verweise in model.json angepasst. Die App versteht beide Formate.
+for (const model of await readdir(join(dist, "models"))) {
+  const dir = join(dist, "models", model);
+  const manifestPath = join(dir, "model.json");
+  const json = JSON.parse(await readFile(manifestPath, "utf8"));
+  for (const group of json.weightsManifest) {
+    group.paths = await Promise.all(
+      group.paths.map(async (path) => {
+        if (path.endsWith(".b64.txt")) return path;
+        const encoded = `${path.replace(/\.bin$/, "")}.b64.txt`;
+        await writeFile(join(dir, encoded), (await readFile(join(dir, path))).toString("base64"));
+        await rm(join(dir, path));
+        return encoded;
+      }),
+    );
+  }
+  await writeFile(manifestPath, JSON.stringify(json));
+}
 
 async function walk(dir) {
   const out = [];
