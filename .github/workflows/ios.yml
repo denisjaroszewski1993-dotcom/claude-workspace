@@ -1,0 +1,92 @@
+# Baut die iPhone-App auf einem Mac in der Cloud – ganz ohne eigenen Mac.
+# Ergebnis: eine unsignierte Fotogeschichten.ipa, die man unter Windows mit
+# Sideloadly (oder AltStore) und einer kostenlosen Apple-ID aufs iPhone bringt.
+# Anleitung: fotogeschichten/IOS.md
+name: iPhone-App bauen
+
+on:
+  push:
+    branches: [main, claude/photo-sorting-storytelling-app-g7dvzi]
+    paths:
+      - "fotogeschichten/**"
+      - ".github/workflows/ios.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ios-app
+  cancel-in-progress: true
+
+jobs:
+  ipa:
+    name: Fotogeschichten.ipa bauen
+    runs-on: macos-15
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: fotogeschichten
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: fotogeschichten/package-lock.json
+
+      - name: Abhängigkeiten installieren
+        run: npm ci
+
+      - name: Tests
+        run: npm test
+        env:
+          TZ: Europe/Berlin
+
+      - name: Oberfläche bauen (lädt die KI-Modelle)
+        run: npm run build
+
+      - name: Ins iOS-Projekt kopieren
+        run: npx cap sync ios
+
+      - name: App kompilieren (ohne Signatur)
+        working-directory: fotogeschichten/ios/App
+        run: |
+          xcodebuild -version
+          xcodebuild -project App.xcodeproj -scheme App -configuration Release \
+            -destination 'generic/platform=iOS' -derivedDataPath build -quiet \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" \
+            CURRENT_PROJECT_VERSION=${{ github.run_number }} \
+            build
+
+      - name: Als .ipa verpacken
+        working-directory: fotogeschichten/ios/App
+        run: |
+          mkdir -p Payload
+          cp -R build/Build/Products/Release-iphoneos/App.app Payload/
+          zip -qry Fotogeschichten.ipa Payload
+          ls -lh Fotogeschichten.ipa
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Fotogeschichten-ipa
+          path: fotogeschichten/ios/App/Fotogeschichten.ipa
+          retention-days: 30
+
+      # Fester Download-Link, der immer auf den neuesten Stand zeigt:
+      # https://github.com/<Besitzer>/<Repo>/releases/download/iphone-app/Fotogeschichten.ipa
+      - name: Download bereitstellen
+        working-directory: fotogeschichten/ios/App
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete iphone-app --yes --cleanup-tag || true
+          gh release create iphone-app Fotogeschichten.ipa \
+            --target "${{ github.sha }}" --prerelease \
+            --title "Fotogeschichten fürs iPhone (Build ${{ github.run_number }})" \
+            --notes "Unsignierte App zum Installieren mit Sideloadly oder AltStore – Anleitung: fotogeschichten/IOS.md"
