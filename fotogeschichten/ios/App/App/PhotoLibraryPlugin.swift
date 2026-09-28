@@ -1,6 +1,7 @@
 import Foundation
 import UIKit
 import Photos
+import PhotosUI
 import CoreLocation
 import Capacitor
 
