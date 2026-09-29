@@ -10,7 +10,7 @@ Zusammengeführt aus zwei Chats (Stand 28.09.2026):
 - Drive-Ordner „Instagram Verwaltung“ (ID `1eTM77GNCF1XC2KGx09vTx5FwtyJhjxah`), Sheet „Instagram Wochenplan KW40“ (ID `1U7VLAO8Yt5rs3IWSkTx_F1-pchnj1gIvPf7BL42IjkY`). Zellen ändern ist nicht möglich (Google Sheets ist in Composio nicht verbunden).
 - kie.ai: `KIE_API_KEY` ist in der Umgebung „Insta“ hinterlegt und funktioniert. Guthaben am 28.09.: 601,5 Credits (ca. 3 $).
   **Sicherheit:** Laut Chat B stand der Schlüssel einmal im Chat. Neuen Schlüssel bei kie.ai erzeugen und in der Umgebung „Insta“ ersetzen.
-- Login am Computer: Das Firmenkonto hat noch die alte E-Mail vich70@gmx.de (kein Zugriff mehr). Anleitung zum Tausch der E-Mail und zum Setzen eines eigenen Passworts steht in Chat A.
+- Login am Computer: Das Firmenkonto hat noch eine alte GMX-Adresse ohne Zugriff. Anleitung zum Tausch der E-Mail und zum Setzen eines eigenen Passworts steht in Chat A.
 
 ## Regeln des Inhabers
 
