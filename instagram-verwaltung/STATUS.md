@@ -36,8 +36,8 @@ Zusammengeführt aus zwei Chats (Stand 28.09.2026):
 | Datum | Inhalt | Status |
 |---|---|---|
 | 24.09. | Papierberg „GENEHMIGT“ (KI-Bild) | **gepostet** – https://www.instagram.com/p/DdrJBJ9EUBW/ (7 Likes, 2 Spam-Kommentare) |
-| 28.09. | „Montag vs. Feierabend“ (KI-Bild, `kie-ausgabe/2026-09-28-montag-vs-feierabend.jpg`) | Entwurf, wartet auf OK |
-| offen | Reel „Folge 1 – Das Amt ruft an“ (Drive `2026-09-24-folge-1-das-amt-ruft-an-FINAL.mp4`, ID `1Nm6UszHnSHVv_f4f6mt8jGkTlCcyNIQw`, 22 MB) | Bildunterschrift + Termin offen, in Chat B abgebrochen |
+| 05.10. | „Montag vs. Feierabend“ (KI-Bild, `kie-ausgabe/2026-09-28-montag-vs-feierabend.jpg`) | verschoben auf 05.10., vorher nochmal zeigen |
+| 29.09. | Reel „Folge 1 – Das Amt ruft an“, v2 mit längeren Schlusstexten (`video/2026-09-29-folge-1-das-amt-ruft-an-v2.mp4`) | **freigegeben** (Video + Text). Container `18071108354724900` angelegt, Veröffentlichen scheiterte: Composio-Anmeldung abgelaufen |
 | 30.09. | L-Deluxe am Strand + „TÜV hat noch 3 Rückfragen“ | Foto fehlt |
 | 02.10. | KI-Video Beamter / 5 Formulare (Kling, ca. 0,35 $) | geplant, Kosten-OK nötig |
 | 04.10. | Frage-Grafik „Welches Amt nervt euch am meisten?“ | geplant |
