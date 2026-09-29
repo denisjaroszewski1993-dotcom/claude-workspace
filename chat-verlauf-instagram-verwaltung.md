@@ -1,4 +1,4 @@
-# Chat-Verlauf: Instagram-Verwaltung (22.–28.09.2026)
+# Chat-Verlauf: Instagram-Verwaltung (22.–29.09.2026)
 
 Zusammengefasste Kopie des Chats zum Einfügen in einen neuen Chat.
 Der kie.ai-Schlüssel ist bewusst **nicht** enthalten.
@@ -56,12 +56,19 @@ Der kie.ai-Schlüssel ist bewusst **nicht** enthalten.
    Plan: Am 28.09. um 17:00 Uhr als Reel posten, auch im Feed. Das Papierberg-Bild sollte auf Dienstag rutschen.
    Für den Video-Upload fehlte eine Google-Drive-Verbindung in Composio, die nie abgeschlossen wurde. Eine Bildunterschrift war auch noch nicht freigegeben.
    **Der Nutzer hat mit „abbruch“ abgebrochen, es wurde nichts gepostet.**
+7. **29.09. (Dienstag), Plan für heute:** Im Wochenplan steht für Dienstag nichts, er wurde seit dem 22.09. nicht geändert.
+   Vorschlag: Folge 1 heute um 18 Uhr nachholen, das Papierberg-Bild auf Donnerstag schieben.
+8. **Änderungswunsch für Folge 1:** Die Texttafeln (schwarzer Hintergrund mit Text) sollen jeweils **2–3 Sekunden länger** laufen.
+   Vorgehen: Das Video laden, die schwarzen Texttafeln automatisch finden, jede Tafel um ca. 2,5 s verlängern (Standbild halten, Ton still weiterlaufen lassen bzw. Musik passend verlängern), dann `…-FINAL-v2.mp4` zur Freigabe zeigen und danach posten.
+   Das Schnittwerkzeug ffmpeg ist in der Cloud-Umgebung eingerichtet (per pip `imageio-ffmpeg`).
+   **Blocker:** Die Google-Drive-Verbindung in Composio ist nicht aktiv. Sie steht auf „initializing“, weil die Google-Anmeldung („Zulassen“) nicht abgeschlossen wurde. Composio ist nur für Instagram verbunden.
+   Lösung: entweder die Composio-Drive-Anmeldung zu Ende führen, oder das Video in Drive für „Jeder mit dem Link“ freigeben und den Link schicken.
 
 ---
 
 ## Offene Punkte
 
-- [ ] Folge 1 posten: Google Drive in Composio verbinden, Bildunterschrift entwerfen und freigeben, Uhrzeit festlegen
+- [ ] Folge 1: an das Video kommen (Composio-Drive fertig verbinden **oder** Freigabelink), Texttafeln um je ca. 2,5 s verlängern, v2 freigeben lassen, Bildunterschrift entwerfen, posten (Vorschlag: heute 18 Uhr)
 - [ ] Papierberg-Bild posten (neuer Termin, Bildunterschrift)
 - [ ] Wochenplan in Drive aktualisieren (Status, Uhrzeiten, Folge 1)
 - [ ] kie.ai-Schlüssel erneuern und dauerhaft als `KIE_API_KEY` hinterlegen
