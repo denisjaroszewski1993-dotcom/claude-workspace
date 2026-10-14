@@ -11,6 +11,12 @@ Referenzkurs = Kurs am Tag des letzten Verkaufs/Kaufs. Alarme sind Kurse in EUR.
 |---|---|---|---|---|---|---|
 | OHB SE | DE0005936124 | verkauft 14.10.2026 (+7 %) | 172,40 (Xetra 14.10., 17:11) | 164,00 (−5 %) | 187,00 | Starker Kaufalarm unter 160 (−7 %). Unter 155 = Trendbruch, Vorsicht |
 | Kongsberg Gruppen ASA | NO0013536151 | verkauft 14.10.2026 (+1,86 %) | 28,28 (Trade Republic 14.10., 17:31) | 26,90 (−5 %) | 30,25 (+7 %) | Starker Kaufalarm unter 26,30 (−7 %). Kurs in EUR, Heimatbörse Oslo in NOK. Quelle: finanzen.net kongsberg_gruppen_asa_registered-aktie |
+| Modine Manufacturing | US6078281002 | im Depot (9.027 EUR, −10,5 % seit Kauf), Nachkauf geplant | 146,00 (Stuttgart 14.10., 17:31) | 139,00 (−5 %) | 156,00 (+7 %) | Nachkauf-Idee von Denis. Seit 01.10. Spin-off Performance Technologies an Gentherm, siehe Abschnitt. Quelle: finanzen.net modine_manufacturing-aktie |
+| RENK Group | DE000RENK730 | im Depot (6.997 EUR, −17,7 % seit Kauf) | beim ersten Lauf eintragen (Xetra-Schluss 14.10.) | −5 % zur Referenz | +7 % zur Referenz | Rüstung, Getriebe. Referenz am 15.10. nachtragen |
+| Intel | US4581401001 | im Depot (3.340 EUR, −4,6 % seit Kauf) | beim ersten Lauf eintragen | −5 % zur Referenz | +7 % zur Referenz | Quelle: finanzen.net intel-aktie |
+| Take-Two Interactive | US8740541094 | im Depot (3.337 EUR, −4,7 % seit Kauf) | beim ersten Lauf eintragen | −5 % zur Referenz | +7 % zur Referenz | GTA VI. Quelle: finanzen.net take-two-aktie |
+| iShares Core MSCI World USD (Acc) | IE00B4L5Y983 | im Depot (im Plus) | beim ersten Lauf eintragen | − | − | ETF, nur Kurs melden, keine Alarme |
+| Eaton | IE00B8KQN827 | im Depot (2.426 EUR, −3,0 % seit Kauf) | beim ersten Lauf eintragen | −5 % zur Referenz | +7 % zur Referenz | Elektrotechnik, Rechenzentren. Quelle: finanzen.net eaton-aktie |
 
 ## OHB SE (WKN 593612, ISIN DE0005936124)
 
@@ -89,3 +95,74 @@ Referenz 28,28 EUR.
 
 ### Quellen
 - https://www.finanzen.net/aktien/kongsberg_gruppen_asa_registered-aktie
+
+## Modine Manufacturing (WKN 869795, ISIN US6078281002, NYSE: MOD)
+
+**Status:** im Depot, ca. 9.027 EUR, −10,5 % seit Kauf (Stand 14.10.2026). Denis will nach dem
+Rücksetzer nachkaufen.
+
+### Kursdaten 14.10.2026
+| Wert | Kurs |
+|---|---|
+| Stuttgart 17:31 | 146,00 EUR (−4,8 %) |
+| NYSE 17:35 | 162,62 USD |
+| Vortagesschluss | 153,35 EUR / ca. 169 USD |
+| 1-Monats-Tief / -Hoch | 147,65 / 176,80 EUR |
+| 3 Monate | −23 % |
+| 6 Monate | −30 % (Hoch 273,50 EUR) |
+| 1 Jahr | +17,5 % (Tief 99,88 EUR) |
+| Marktkapitalisierung | ca. 8,2 Mrd. EUR |
+| KGV (rückwirkend) | ca. 65 bis 96, je nach Quelle |
+
+### Warum gefallen (Stand 14.10.2026)
+1. **Spin-off am 01.10.2026.** Modine hat die Fahrzeugsparte „Performance Technologies“ (Wert ca.
+   946 Mio. USD, rund 10 % des Börsenwerts) abgespalten und mit Gentherm (NASDAQ: THRM) fusioniert.
+   Aktionäre, die am 28.09. Modine hielten, bekamen 0,44619 Gentherm-Aktien je Modine-Aktie,
+   Bruchstücke in bar. Modine selbst ist danach rechnerisch rund 10 % weniger wert, das ist kein
+   Verlust, sondern liegt als Gentherm-Position bzw. Barausgleich im Depot. **Prüfen, ob Trade
+   Republic Gentherm eingebucht hat, falls Denis vor dem 28.09. gekauft hat.**
+2. **Erster Handelstag danach, 02.10.:** −5,9 %. Oppenheimer senkt Kursziel von 300 auf 260 USD,
+   Rating bleibt Outperform.
+3. **06.10.:** Analysten-Konsens für Umsatz 2027 um 16 % gesenkt, Gewinn je Aktie von 4,31 auf
+   2,42 USD. Größtenteils mechanisch, weil die Fahrzeugsparte weg ist, aber Schlagzeile „Schätzungen
+   gesenkt“ drückt.
+4. **12.10.:** −5 %. **14.10.:** nochmal ca. −4 %, zusammen mit der ganzen KI-Infrastruktur-Gruppe
+   (Vertiv, Micron, Credo, Marvell alle rot). Branchenweite Gewinnmitnahmen nach dem KI-Lauf.
+5. Übergeordnet: Die Aktie war im April bei 273 EUR, hat sich seit dem Hoch fast halbiert. Hohe
+   Bewertung (KGV deutlich über 50) bei gleichzeitigem Umbau der Firma.
+
+### Perspektive
+- Modine wird reiner Thermomanagement-Konzern: Rechenzentrumskühlung, Gewerbe-HVAC, Kältetechnik.
+  Umbenennung in „Modexus Solutions“ geplant (Aktionärsversammlung binnen 3 Monaten, Ticker bleibt MOD).
+- Management-Ziel: Rechenzentrumsumsatz von ca. 1 Mrd. USD (GJ 2026) auf 2 Mrd. USD (GJ 2028)
+  verdoppeln. 300 offene Stellen im Data-Center-Bereich (23.09.). 156 Mio. USD aus dem Spin-off
+  zur Schuldentilgung genutzt.
+- Analysten: Konsens „Moderate Buy“, mittleres Kursziel ca. 309 USD (MarketBeat, 10.10.), KeyBanc
+  370 USD (Mai), B. Riley 264 USD, Oppenheimer 260 USD. Kurs 162 USD, also deutlich darunter.
+- Gegenstimmen: GuruFocus sieht fairen Wert bei 153 USD (überbewertet). KGV rund 65x.
+- Risiken: KI-Investitionen der Hyperscaler könnten abflachen, Konzentration auf wenige Großkunden,
+  Integration von Zukäufen, hohe Bewertung ohne Puffer.
+- Geschäftsjahresende 31.03. Quartalszahlen Q2 GJ27 voraussichtlich Anfang November, Termin nachtragen.
+
+### Zonen (Referenz 146,00 EUR)
+- **Nachkauf-Alarm ab 139 EUR (−5 %).** Darunter Monatstief 147,65 schon gerissen.
+- **Über 156 EUR (+7 %):** Erholung läuft.
+
+### Quellen
+- https://www.finanzen.net/aktien/modine_manufacturing-aktie
+- https://www.stocktitan.net/news/MOD/modine-completes-spin-off-and-combination-of-its-performance-xeygmuorfy5e.html
+- https://simplywall.st/stocks/us/capital-goods/nyse-mod/modine-manufacturing/news/why-modine-manufacturing-mod-shares-dropped-and-what-investo
+- https://www.marketbeat.com/instant-alerts/filing-modine-manufacturing-company-mod-stake-increased-by-reinhart-partners-llc-2026-10-10/
+
+## Depot (Screenshot Trade Republic, 14.10.2026, 17:35)
+
+| Position | Wert | Seit Kauf |
+|---|---|---|
+| Modine Manufacturing | 9.026,75 EUR | −10,52 % |
+| RENK Group | 6.996,77 EUR | −17,71 % |
+| Intel | 3.339,80 EUR | −4,64 % |
+| Take-Two Interactive | 3.336,51 EUR | −4,73 % |
+| iShares Core MSCI World USD (Acc) | ? | im Plus |
+| Eaton | 2.426,39 EUR | −2,98 % |
+
+Weitere Positionen unterhalb von Eaton noch nicht erfasst. Trade-Republic-Watchlist: 101 Werte.
