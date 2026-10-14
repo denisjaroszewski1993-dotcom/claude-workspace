@@ -74,3 +74,15 @@ gefallen ist und ob eine Einstiegszone erreicht wurde.
   Watchlist aufnehmen (Referenzkurs = Kurs am Tag der Aufnahme, Alarm unter = minus 5 %,
   Alarm über = plus 7 %, sofern Denis nichts anderes sagt). Käufe und Verkäufe nach
   `aktien/trades.md` eintragen.
+
+## Ablage in Google Drive
+
+Drive-Ordner „Claude - Aktien“, ID `1wA_j3e2jFugFsgZiF_Hrh9NUQTyi1Dk8`. Dort liegen
+`watchlist.md`, `trades.md`, `Gesprächsverlauf Aktien.md` und die Berichte.
+Nur wenn die Google-Drive-Tools in der Sitzung verfügbar sind (Zeitplan-Sitzungen haben sie nicht):
+den neuen Bericht als `Bericht JJJJ-MM-TT.md` hochladen (`text/markdown`, ohne Konvertierung).
+Geänderte `watchlist.md` oder `trades.md` neu hochladen und die alte Version per `trash_file`
+in den Papierkorb legen, damit keine Dubletten liegen bleiben.
+Den Abschnitt `aktien/gespraechsverlauf.md` am Ende jeder interaktiven Sitzung ergänzen und
+ebenfalls nach Drive hochladen. Obsidian: Vault `notes`, Notiz `Claude/Aktien.md`, nur wenn
+die `obsidian_*`-Tools erreichbar sind, sonst den Text im Chat ausgeben.
