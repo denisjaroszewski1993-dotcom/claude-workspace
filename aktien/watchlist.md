@@ -17,6 +17,7 @@ Referenzkurs = Kurs am Tag des letzten Verkaufs/Kaufs. Alarme sind Kurse in EUR.
 | Take-Two Interactive | US8740541094 | im Depot (3.337 EUR, −4,7 % seit Kauf) | beim ersten Lauf eintragen | −5 % zur Referenz | +7 % zur Referenz | GTA VI. Quelle: finanzen.net take-two-aktie |
 | iShares Core MSCI World USD (Acc) | IE00B4L5Y983 | im Depot (im Plus) | beim ersten Lauf eintragen | − | − | ETF, nur Kurs melden, keine Alarme |
 | Eaton | IE00B8KQN827 | im Depot (2.426 EUR, −3,0 % seit Kauf) | beim ersten Lauf eintragen | −5 % zur Referenz | +7 % zur Referenz | Elektrotechnik, Rechenzentren. Quelle: finanzen.net eaton-aktie |
+| Prysmian | IT0004176001 | im Depot (2.311 EUR, −7,8 % seit Kauf) | 113,50 (Trade Republic 14.10., 17:50) | 107,80 (−5 %) | 121,50 (+7 %) | Kabel, Stromnetze, Rechenzentren. Atkore-Übernahme schließt 19.10., Q3-Zahlen 29.10. Quelle: finanzen.net prysmian-aktie |
 
 ## OHB SE (WKN 593612, ISIN DE0005936124)
 
@@ -154,6 +155,51 @@ Rücksetzer nachkaufen.
 - https://simplywall.st/stocks/us/capital-goods/nyse-mod/modine-manufacturing/news/why-modine-manufacturing-mod-shares-dropped-and-what-investo
 - https://www.marketbeat.com/instant-alerts/filing-modine-manufacturing-company-mod-stake-increased-by-reinhart-partners-llc-2026-10-10/
 
+## Prysmian (WKN A0MP84, ISIN IT0004176001, Mailand: PRY)
+
+**Status:** im Depot, ca. 2.311 EUR, −7,8 % seit Kauf (Stand 14.10.2026).
+
+### Kursdaten 14.10.2026
+| Wert | Kurs |
+|---|---|
+| Trade Republic 17:50 | 113,50 EUR |
+| Mailand Schluss | −5,5 %, schlechtester Wert im FTSE MIB |
+| Vortagesschluss | 120,75 EUR |
+| Tagestief / -hoch | 113,55 / 121,35 EUR |
+| 3-Monats-Tief | 110,60 EUR |
+| 52-Wochen-Hoch (Mai 2026) | 157,50 EUR |
+| 52-Wochen-Tief | 79,52 EUR |
+| 1 Jahr | +38 % |
+| Marktkapitalisierung | ca. 36,7 Mrd. EUR |
+| KGV | ca. 19,5, Dividendenrendite 1,0 % |
+
+### Warum gefallen (14.10.2026)
+- Morgens noch +1,4 % (Übernahme Xtera, Unterseekabel-Telekom, 65 Mio. USD). Ab Mittag abgerutscht,
+  ab 14:30 Uhr beschleunigt: US-Inflation September über Erwartung (+0,6 % zum Vormonat, +3,7 % zum
+  Vorjahr), 10-jährige US-Rendite bis 5,3 %, Dollar fester, Wall Street rot. Zinsfantasie weg,
+  Industrie- und KI-Infrastrukturwerte verkauft (gleiche Bewegung wie Modine, Vertiv, Micron).
+- Belastung seit Wochen: Übernahme Atkore (USA, ca. 5,5 Mrd. USD, 95 USD je Aktie in bar), Closing
+  am 19.10.2026, teils über Kapitalerhöhung finanziert. 07.10.: −7,6 %. Markt fürchtet Verwässerung
+  und Schulden zum Zeitpunkt hoher Zinsen.
+- Seit dem Hoch im Mai (157,50) rund 28 % runter. KGV 19,5 ist für einen Kabelhersteller nicht billig,
+  aber kein Blasen-Niveau.
+
+### Perspektive
+- Geschäft läuft: 2025 Rekordjahr, Q2 2026 stark. Prysmian ist Weltmarktführer bei Kabeln für
+  Stromnetze, Offshore-Wind, Unterseekabel und Rechenzentren. Nachfrage durch Netzausbau und KI
+  strukturell hoch, Auftragsbücher auf Jahre voll.
+- Analysten-Konsens „Moderate Buy“ (03.10.2026). Nächster Auslöser: Q3-Zahlen am 29.10.2026 und
+  erster Ausblick mit Atkore.
+- Risiko: Zinsen hoch, Kupferpreis, Integration Atkore, US-Zölle.
+
+### Zonen (Referenz 113,50 EUR)
+- **Alarm ab 107,80 EUR (−5 %).** Darunter wäre das 3-Monats-Tief von 110,60 gerissen.
+- **Über 121,50 EUR (+7 %):** zurück über den Vortagesschluss, Rutsch verdaut.
+
+### Quellen
+- https://www.finanzen.net/aktien/prysmian-aktie
+- https://www.milanofinanza.it/news/borse-oggi-diretta-14-ottobre-2026-chiusura-apertura-europee-borsa-milano-ftse-mib-piazza-affari-202610140743597132
+
 ## Depot (Screenshot Trade Republic, 14.10.2026, 17:35)
 
 | Position | Wert | Seit Kauf |
@@ -164,5 +210,6 @@ Rücksetzer nachkaufen.
 | Take-Two Interactive | 3.336,51 EUR | −4,73 % |
 | iShares Core MSCI World USD (Acc) | ? | im Plus |
 | Eaton | 2.426,39 EUR | −2,98 % |
+| Prysmian | 2.310,67 EUR | −7,84 % |
 
 Weitere Positionen unterhalb von Eaton noch nicht erfasst. Trade-Republic-Watchlist: 101 Werte.
