@@ -42,7 +42,7 @@ Denis erwartet nach dem Verkauf einen Rücksetzer von 5 bis 7 % oder mehr. Refer
 - **Über 187 EUR** (Monatshoch): Rücksetzer vorerst vom Tisch.
 
 ### Wichtige Fakten
-- Streubesitz nur 11,55 %. Deshalb extreme Schwankungen (180-Tage-Vola 103 %). Tagesbewegungen von 10 % sind normal.
+- Streubesitz laut finanzen.net 11,55 %, vermutlich veraltet: Re-IPO im Juni 2026 zu 300 EUR hat den Streubesitz etwa verdreifacht (siehe weltraum-aktien.md). Trotzdem extreme Schwankungen (180-Tage-Vola 103 %), Tagesbewegungen von 10 % sind normal.
 - Analysten: Berenberg Buy, Ziel 358 EUR (12.10.2026). Konsens 6x Kaufen, 1x Halten.
 - KGV 2025: 45. Gewinn/Aktie 2026e 3,08 EUR, 2027e 5,11 EUR.
 - Dividende 0,59 EUR (Rendite 0,5 %).
