@@ -1,4 +1,4 @@
-# Typenschild „Mobile Sauna Hamburg“ – 80 x 40 mm
+# Typenschild „Mobile Sauna Hamburg“ – 80 x 40 mm und 100 x 50 mm
 
 ## Dateien
 
@@ -6,6 +6,8 @@
 |---|---|
 | `schild-80x40-mit-bohrungen.pdf` / `.svg` | Produktionsdatei, 4 Bohrungen Ø 3,2 mm in den Ecken (zum Schrauben) |
 | `schild-80x40-ohne-bohrungen.pdf` / `.svg` | Produktionsdatei ohne Löcher (zum Kleben) |
+| `schild-100x50-mit-bohrungen.pdf` / `.svg` | Gleiches Layout in 100 x 50 mm, 4 Bohrungen Ø 3,2 mm, 5,6 mm von den Kanten |
+| `schild-100x50-ohne-bohrungen.pdf` / `.svg` | 100 x 50 mm ohne Löcher |
 | `vorschau-*.png` | Vorschau in 600 dpi |
 | `mockup-schwarz-eloxiert.png` | So sieht es auf schwarz eloxiertem Alu mit weißer Lasergravur aus |
 | `logo-symbol-vektor.svg` | Nur das Logo-Symbol (Kübel + Kelle) als Vektor, für andere Zwecke |
@@ -15,11 +17,11 @@ Farblegende: **Schwarz = Gravur/Beschriftung**, **Rot = Bohrungen**, **dünner b
 
 ## Spezifikation für die Bestellung (so in das Bestellformular/die Anfrage schreiben)
 
-- Maß: 80 x 40 mm, Ecken R 2 mm
+- Maß: 80 x 40 mm (Ecken R 2 mm) oder 100 x 50 mm (Ecken R 2,5 mm)
 - Material: Aluminium eloxiert, 0,5–1,0 mm, **schwarz** (Gravur wird weiß/silber) – oder Edelstahl gebürstet mit dunkler Lasergravur
 - Verfahren: Lasergravur (einfarbig, Vektorvorlage)
-- Befestigung: 4 Bohrungen Ø 3,2 mm, Mittelpunkt 4,5 mm von jeder Kante – oder ohne Bohrung, selbstklebend
-- Kleinste Schrift: ca. 2,6 mm Versalhöhe (Website-Zeile) – für Lasergravur unkritisch
+- Befestigung: 4 Bohrungen Ø 3,2 mm, Mittelpunkt 4,5 mm (80x40) bzw. 5,6 mm (100x50) von jeder Kante – oder ohne Bohrung, selbstklebend
+- Kleinste Schrift: ca. 2,6 mm (80x40) bzw. 3,3 mm (100x50) Schriftgröße in der Website-Zeile – für Lasergravur unkritisch
 
 ## Sauna-Hinweise
 
