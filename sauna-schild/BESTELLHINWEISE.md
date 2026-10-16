@@ -8,12 +8,13 @@
 | `schild-80x40-ohne-bohrungen.pdf` / `.svg` | Produktionsdatei ohne Löcher (zum Kleben) |
 | `schild-100x50-mit-bohrungen.pdf` / `.svg` | Gleiches Layout in 100 x 50 mm, 4 Bohrungen Ø 3,2 mm, 5,6 mm von den Kanten |
 | `schild-100x50-ohne-bohrungen.pdf` / `.svg` | 100 x 50 mm ohne Löcher |
+| `schild-*-schwarz-weiss-*.pdf` / `.svg` | Gleiche Motive mit schwarzem Grund und weißer Schrift (für Druck auf Alu oder wenn der Anbieter die Ansicht so haben will) |
 | `vorschau-*.png` | Vorschau in 600 dpi |
 | `mockup-schwarz-eloxiert.png` | So sieht es auf schwarz eloxiertem Alu mit weißer Lasergravur aus |
 | `logo-symbol-vektor.svg` | Nur das Logo-Symbol (Kübel + Kelle) als Vektor, für andere Zwecke |
 
 Alle Schriften sind in Pfade umgewandelt, die Dateien sind maßhaltig (PDF-Seite = 80 x 40 mm).
-Farblegende: **Schwarz = Gravur/Beschriftung**, **Rot = Bohrungen**, **dünner blauer Rahmen (nur PDF) = Schildkante, Eckradius 2 mm**.
+Farblegende Standarddateien: **Schwarz = Gravur/Beschriftung**, **Rot = Bohrungen**. In den `schwarz-weiss`-Dateien ist es umgekehrt: schwarzer Grund, weiße Beschriftung, **dünner blauer Rahmen (nur PDF) = Schildkante, Eckradius 2 mm**.
 
 ## Spezifikation für die Bestellung (so in das Bestellformular/die Anfrage schreiben)
 
