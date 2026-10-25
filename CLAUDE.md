@@ -30,8 +30,12 @@ Jeder Beitrag für Mobile Sauna Hamburg geht identisch auf Instagram
 (@mobilesaunahamburg) **und** auf die Facebook-Seite „Mobilesauna-Hamburg“
 (page_id `103980968875536`): gleiche Medien, gleicher Text, direkt nacheinander.
 
-- Gepostet wird nur nach ausdrücklichem „Ja, posten“ von Denis. Das Ja gilt für
-  beide Plattformen, außer er sagt etwas anderes.
+- Denis will jeden Beitrag vorher sehen: erst Medien und fertigen Text zeigen,
+  nie ungesehen posten.
+- Sagt Denis zu einem gezeigten Beitrag „posten“ (oder „poste das“, „ja, posten“),
+  wird **sofort** gepostet, ohne weitere Rückfrage. Das gilt für beide Plattformen,
+  außer er nennt nur eine. Nur wenn sich Medien oder Text danach noch ändern,
+  den geänderten Stand erneut zeigen.
 - Danach beide Links melden. Schlägt eine Plattform fehl, das sofort sagen.
 - Ablauf, Werkzeuge pro Format und Konto-IDs: `social-media/PARALLEL-POSTEN.md`.
 

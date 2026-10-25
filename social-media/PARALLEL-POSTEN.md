@@ -16,8 +16,10 @@ Facebook-Seite `105186882636721`). Die nur nehmen, wenn Denis das ausdrücklich 
 
 ## Feste Regeln
 
-1. **Erst nach „Ja, posten“ von Denis.** Ein „Ja“ gilt für beide Plattformen
-   zusammen. Soll ein Beitrag nur auf eine Plattform, sagt Denis das dazu.
+1. **Erst zeigen, dann auf Denis' „posten“ sofort posten.** Denis sieht jeden
+   Beitrag (Medien + fertiger Text) vorher. Sagt er dazu „posten“, wird ohne
+   weitere Rückfrage auf beiden Plattformen gepostet. Soll ein Beitrag nur auf
+   eine Plattform, sagt Denis das dazu.
 2. **Identischer Inhalt.** Text 1:1 übernehmen, auch Emojis, Hashtags, Telefonnummer
    und den KI-Hinweis („Symbolbild (KI)“, „SATIRE“ usw.). Keine Plattform-Varianten,
    außer Denis will das.
