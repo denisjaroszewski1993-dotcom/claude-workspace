@@ -24,6 +24,17 @@ Hintergrund: Am 14.10.2026 ging eine Antwort an Thomas Lorenzen (KMTV Kiel,
 Thema „Defekte Fliesen“) versehentlich von der Gmail-Adresse raus. Das soll
 nicht wieder vorkommen.
 
+## Social Media: Instagram und Facebook immer parallel
+
+Jeder Beitrag für Mobile Sauna Hamburg geht identisch auf Instagram
+(@mobilesaunahamburg) **und** auf die Facebook-Seite „Mobilesauna-Hamburg“
+(page_id `103980968875536`): gleiche Medien, gleicher Text, direkt nacheinander.
+
+- Gepostet wird nur nach ausdrücklichem „Ja, posten“ von Denis. Das Ja gilt für
+  beide Plattformen, außer er sagt etwas anderes.
+- Danach beide Links melden. Schlägt eine Plattform fehl, das sofort sagen.
+- Ablauf, Werkzeuge pro Format und Konto-IDs: `social-media/PARALLEL-POSTEN.md`.
+
 ## Ton in Kunden-Mails
 
 Denis schreibt norddeutsch locker: „Moin“, Du-Form bei bekannten Kunden,
